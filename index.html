@@ -342,6 +342,21 @@ async function storageSet(key, value){
     return {key, value, shared:false};
   }catch(e){ console.error('Lokales Speichern fehlgeschlagen', e); return null; }
 }
+/* Firebase Realtime Database entfernt leere Arrays/Objekte beim Schreiben (bekannte Eigenheit) —
+   nach jedem Laden/Sync-Übernehmen von DATA müssen daher betroffene Felder wiederhergestellt werden. */
+function normalizeData(){
+  if(!Array.isArray(DATA.recurring)) DATA.recurring = [];
+  if(!Array.isArray(DATA.transactions)) DATA.transactions = [];
+  if(!Array.isArray(DATA.kredite)) DATA.kredite = [];
+  if(!Array.isArray(DATA.sonstiges)) DATA.sonstiges = [];
+  if(!DATA.paidMarks || typeof DATA.paidMarks!=='object') DATA.paidMarks = {};
+  if(!DATA.dateOverrides || typeof DATA.dateOverrides!=='object') DATA.dateOverrides = {};
+  DATA.recurring.forEach(r=>{
+    if(!Array.isArray(r.months)) r.months = [];
+    if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod];
+  });
+  DATA.transactions.forEach(t=>{ if(PAYMENT_SLUG_MIGRATION[t.paymentMethod]) t.paymentMethod = PAYMENT_SLUG_MIGRATION[t.paymentMethod]; });
+}
 async function loadData(){
   loadSyncConfig();
   try{
@@ -352,10 +367,7 @@ async function loadData(){
     DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
     try{ await saveData(); }catch(e2){}
   }
-  if(!DATA.paidMarks) DATA.paidMarks = {};
-  if(!DATA.dateOverrides) DATA.dateOverrides = {};
-  DATA.recurring.forEach(r=>{ if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod]; });
-  DATA.transactions.forEach(t=>{ if(PAYMENT_SLUG_MIGRATION[t.paymentMethod]) t.paymentMethod = PAYMENT_SLUG_MIGRATION[t.paymentMethod]; });
+  normalizeData();
   render();
   if(syncConfig.connected){
     syncReconcile().then(()=>{ render(); });
@@ -435,6 +447,7 @@ async function connectAndSync(){
     const remote = await pullFromFirebase();
     if(remote && remote.updatedAt && (!DATA.updatedAt || remote.updatedAt > DATA.updatedAt)){
       DATA = remote;
+      normalizeData();
       await storageSet(STORAGE_KEY, JSON.stringify(DATA));
     } else {
       DATA.updatedAt = Date.now();
@@ -456,6 +469,7 @@ async function syncReconcile(){
     const remote = await pullFromFirebase();
     if(remote && remote.updatedAt && (!DATA.updatedAt || remote.updatedAt > DATA.updatedAt)){
       DATA = remote;
+      normalizeData();
       await storageSet(STORAGE_KEY, JSON.stringify(DATA));
     } else if(DATA.updatedAt){
       await pushToFirebase();
