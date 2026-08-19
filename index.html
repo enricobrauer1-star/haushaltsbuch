@@ -316,7 +316,9 @@ let state = {
   addingRecGroup: null,
   addingKr: null,
   addingSon: false,
-  resetConfirm: false
+  resetConfirm: false,
+  syncMsg: null,
+  syncMsgError: false
 };
 /* ---------- Storage ---------- */
 const hasCloudStorage = (typeof window.storage !== 'undefined') && window.storage && typeof window.storage.get === 'function';
@@ -341,6 +343,7 @@ async function storageSet(key, value){
   }catch(e){ console.error('Lokales Speichern fehlgeschlagen', e); return null; }
 }
 async function loadData(){
+  loadSyncConfig();
   try{
     const res = await storageGet(STORAGE_KEY);
     if(res && res.value){ DATA = JSON.parse(res.value); }
@@ -354,9 +357,131 @@ async function loadData(){
   DATA.recurring.forEach(r=>{ if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod]; });
   DATA.transactions.forEach(t=>{ if(PAYMENT_SLUG_MIGRATION[t.paymentMethod]) t.paymentMethod = PAYMENT_SLUG_MIGRATION[t.paymentMethod]; });
   render();
+  if(syncConfig.connected){
+    syncReconcile().then(()=>{ render(); });
+  }
 }
 async function saveData(){
+  DATA.updatedAt = Date.now();
   await storageSet(STORAGE_KEY, JSON.stringify(DATA));
+  if(syncConfig.connected){
+    pushToFirebase().then(()=>{
+      syncConfig.lastSync = Date.now();
+      saveSyncConfigLocal();
+    }).catch(e=>{ console.error('Auto-Sync-Push fehlgeschlagen', e); });
+  }
+}
+/* ---------- Sync (Firebase Realtime Database, REST) ---------- */
+const SYNC_CONFIG_KEY = 'haushaltsbuch-sync-config';
+let syncConfig = {url:'', key:'', connected:false, lastSync:null};
+function loadSyncConfig(){
+  try{
+    const raw = localStorage.getItem(SYNC_CONFIG_KEY);
+    if(raw) syncConfig = Object.assign({url:'', key:'', connected:false, lastSync:null}, JSON.parse(raw));
+  }catch(e){}
+}
+function saveSyncConfigLocal(){
+  try{ localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig)); }catch(e){}
+}
+function normalizeFirebaseUrl(url){
+  let u = (url||'').trim();
+  if(!/^https?:\/\//i.test(u)) u = 'https://'+u;
+  return u.replace(/\/+$/,'');
+}
+function firebaseDataUrl(){
+  return `${normalizeFirebaseUrl(syncConfig.url)}/haushaltsbuch/${encodeURIComponent(syncConfig.key)}.json`;
+}
+function genSyncKey(){
+  let key = '';
+  if(window.crypto && crypto.getRandomValues){
+    const arr = new Uint8Array(15);
+    crypto.getRandomValues(arr);
+    key = Array.from(arr, b=>b.toString(36).padStart(2,'0')).join('').slice(0,20);
+  } else {
+    key = (Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)).slice(0,20);
+  }
+  const inp = document.getElementById('sync-key');
+  if(inp) inp.value = key;
+}
+async function pushToFirebase(){
+  const res = await fetch(firebaseDataUrl(), {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(DATA)
+  });
+  if(!res.ok) throw new Error('Firebase-Antwort: '+res.status);
+  return true;
+}
+async function pullFromFirebase(){
+  const res = await fetch(firebaseDataUrl());
+  if(!res.ok) throw new Error('Firebase-Antwort: '+res.status);
+  return await res.json();
+}
+async function connectAndSync(){
+  const urlInput = document.getElementById('sync-url');
+  const keyInput = document.getElementById('sync-key');
+  const url = urlInput ? urlInput.value.trim() : '';
+  const key = keyInput ? keyInput.value.trim() : '';
+  if(!url || !key){
+    state.syncMsg = 'Bitte Datenbank-URL und Sync-Schlüssel ausfüllen.';
+    state.syncMsgError = true;
+    render();
+    return;
+  }
+  syncConfig.url = url; syncConfig.key = key;
+  state.syncMsg = 'Verbinde …'; state.syncMsgError = false;
+  render();
+  try{
+    const remote = await pullFromFirebase();
+    if(remote && remote.updatedAt && (!DATA.updatedAt || remote.updatedAt > DATA.updatedAt)){
+      DATA = remote;
+      await storageSet(STORAGE_KEY, JSON.stringify(DATA));
+    } else {
+      DATA.updatedAt = Date.now();
+      await pushToFirebase();
+    }
+    syncConfig.connected = true;
+    syncConfig.lastSync = Date.now();
+    saveSyncConfigLocal();
+    state.syncMsg = 'Verbunden & synchronisiert.'; state.syncMsgError = false;
+  }catch(e){
+    console.error('Sync-Verbindung fehlgeschlagen', e);
+    state.syncMsg = 'Verbindung fehlgeschlagen: '+e.message; state.syncMsgError = true;
+  }
+  render();
+}
+async function syncReconcile(){
+  if(!syncConfig.connected || !syncConfig.url || !syncConfig.key) return;
+  try{
+    const remote = await pullFromFirebase();
+    if(remote && remote.updatedAt && (!DATA.updatedAt || remote.updatedAt > DATA.updatedAt)){
+      DATA = remote;
+      await storageSet(STORAGE_KEY, JSON.stringify(DATA));
+    } else if(DATA.updatedAt){
+      await pushToFirebase();
+    }
+    syncConfig.lastSync = Date.now();
+    saveSyncConfigLocal();
+    state.syncMsg = 'Zuletzt synchronisiert: '+new Date(syncConfig.lastSync).toLocaleTimeString('de-DE');
+    state.syncMsgError = false;
+  }catch(e){
+    console.error('Sync fehlgeschlagen', e);
+    state.syncMsg = 'Sync fehlgeschlagen: '+e.message;
+    state.syncMsgError = true;
+  }
+}
+async function syncNowManual(){
+  state.syncMsg = 'Synchronisiere …'; state.syncMsgError = false;
+  render();
+  await syncReconcile();
+  render();
+}
+function disconnectSync(){
+  syncConfig = {url:syncConfig.url, key:syncConfig.key, connected:false, lastSync:syncConfig.lastSync};
+  saveSyncConfigLocal();
+  state.syncMsg = 'Sync getrennt (URL & Schlüssel bleiben im Formular stehen).';
+  state.syncMsgError = false;
+  render();
 }
 /* ---------- Helpers ---------- */
 function uid(p){ return p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
@@ -484,6 +609,7 @@ function render(){
       ${tabBtn('buchungen','Buchungen')}
       ${tabBtn('fixkosten','Fixkosten')}
       ${tabBtn('kredite','Kredite')}
+      ${tabBtn('sync','Sync')}
     </div>
     <div class="sheet flat" id="sheet"></div>
     ${state.resetConfirm ? `
@@ -494,19 +620,20 @@ function render(){
           <button class="icon-btn" onclick="state.resetConfirm=false; render();">Abbrechen</button>
         </span>
       </div>` : ''}
-    <div class="footer-note">${hasCloudStorage ? 'Daten werden in diesem Chat gespeichert' : 'Daten werden lokal in diesem Browser auf diesem Rechner gespeichert'} · <button onclick="state.resetConfirm=true; render();">Auf Ausgangsdaten zurücksetzen</button></div>
+    <div class="footer-note">${hasCloudStorage ? 'Daten werden in diesem Chat gespeichert' : 'Daten werden lokal in diesem Browser auf diesem Rechner gespeichert'}${syncConfig.connected ? ' · 🔄 Sync verbunden'+(syncConfig.lastSync ? ' (zuletzt '+new Date(syncConfig.lastSync).toLocaleTimeString('de-DE')+')' : '') : ''} · <button onclick="state.resetConfirm=true; render();">Auf Ausgangsdaten zurücksetzen</button></div>
   `;
   const sheet = document.getElementById('sheet');
   if(state.tab==='dashboard') sheet.innerHTML = renderDashboard();
   if(state.tab==='buchungen') sheet.innerHTML = renderBuchungen();
   if(state.tab==='fixkosten') sheet.innerHTML = renderFixkosten();
   if(state.tab==='kredite') sheet.innerHTML = renderKredite();
+  if(state.tab==='sync') sheet.innerHTML = renderSync();
   afterRenderHooks();
 }
 function tabBtn(id,label){
   return `<button class="tab-btn ${state.tab===id?'active':''}" onclick="switchTab('${id}')">${label}</button>`;
 }
-function switchTab(id){ state.tab=id; state.editTxnId=null; state.editRecId=null; state.editKrId=null; state.editSonId=null; state.resetConfirm=false; render(); }
+function switchTab(id){ state.tab=id; state.editTxnId=null; state.editRecId=null; state.editKrId=null; state.editSonId=null; state.resetConfirm=false; state.syncMsg=null; render(); }
 /* ---------- Dashboard ---------- */
 function renderDashboard(){
   const {inc,exp} = monthTotals(state.selYear, state.selMonth);
@@ -1140,6 +1267,58 @@ function addSon(){
   state.addingSon = false; saveData(); render();
 }
 function deleteSon(id){ DATA.sonstiges = DATA.sonstiges.filter(s=>s.id!==id); saveData(); render(); }
+/* ---------- Sync-Tab (UI) ---------- */
+function renderSync(){
+  const cfg = syncConfig;
+  const statusLabel = !cfg.url || !cfg.key ? 'Nicht eingerichtet' : (cfg.connected ? 'Verbunden' : 'Eingerichtet, nicht verbunden');
+  const lastSyncLabel = cfg.lastSync ? new Date(cfg.lastSync).toLocaleString('de-DE') : '–';
+  const ruleKey = esc(cfg.key || 'DEIN-SCHLÜSSEL');
+  return `
+    <h2 class="section-title">Sync <span class="n">${statusLabel}</span></h2>
+    <p class="section-desc">Verbindet dieses Haushaltsbuch mit einer eigenen Firebase Realtime Database, damit Daten geräteübergreifend synchron bleiben. Ohne Verbindung werden Daten nur lokal in diesem Browser gespeichert.</p>
+    <div class="form-card">
+      <div class="form-grid" style="grid-template-columns:1fr;">
+        <div class="form-field">
+          <label class="small">Firebase Datenbank-URL</label>
+          <input type="text" id="sync-url" placeholder="https://dein-projekt-default-rtdb.firebaseio.com/" value="${esc(cfg.url||'')}">
+        </div>
+        <div class="form-field">
+          <label class="small">Sync-Schlüssel</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="sync-key" placeholder="Zufällig erzeugen oder eigenen eintragen" value="${esc(cfg.key||'')}" style="flex:1;">
+            <button class="icon-btn" onclick="genSyncKey()">🎲 Zufällig erzeugen</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="icon-btn primary" onclick="connectAndSync()">Verbinden &amp; synchronisieren</button>
+        ${cfg.connected ? `<button class="icon-btn" onclick="syncNowManual()">↻ Jetzt synchronisieren</button><button class="icon-btn danger" onclick="disconnectSync()">Trennen</button>` : ''}
+      </div>
+      ${state.syncMsg ? `<p class="section-desc" style="margin-top:12px;color:${state.syncMsgError?'var(--expense)':'var(--income)'};">${esc(state.syncMsg)}</p>` : ''}
+      <p class="section-desc" style="margin-top:16px;">Letzte Synchronisierung: ${lastSyncLabel}</p>
+    </div>
+    <div class="group-block">
+      <h3>Einrichtung</h3>
+      <p class="section-desc">
+        1. Firebase-Projekt anlegen (console.firebase.google.com) → Realtime Database erstellen.<br>
+        2. Datenbank-URL oben eintragen (endet auf „…firebaseio.com/" bzw. „…firebasedatabase.app/").<br>
+        3. Sync-Schlüssel zufällig erzeugen, notieren und auf jedem Gerät identisch eintragen.<br>
+        4. Auf jedem Gerät „Verbinden &amp; synchronisieren" klicken.
+      </p>
+      <p class="section-desc" style="margin-top:10px;">⚠️ Sicherheitshinweis: Ohne eigene Regeln kann jeder mit Datenbank-URL und Sync-Schlüssel lesen/schreiben. Für echten Schutz in den Firebase-Regeln (Realtime Database → Regeln) den Pfad auf den eigenen Schlüssel einschränken, z. B.:</p>
+      <pre style="background:var(--paper-light);border:1px solid var(--rule);border-radius:8px;padding:10px;font-size:11.5px;overflow-x:auto;">{
+  "rules": {
+    "haushaltsbuch": {
+      "$key": {
+        ".read": "$key === '${ruleKey}'",
+        ".write": "$key === '${ruleKey}'"
+      }
+    }
+  }
+}</pre>
+    </div>
+  `;
+}
 /* ---------- Reset ---------- */
 async function doReset(){
   DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
