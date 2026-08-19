@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haushaltsbuch</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1E3D2E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cover:#1E3D2E;
+    --cover-dark:#122922;
+    --cover-light:#2B4F3B;
+    --paper:#EDE6D2;
+    --paper-light:#F6F1E1;
+    --ink:#241F17;
+    --ink-soft:#6B6151;
+    --rule:#CBBF9E;
+    --brass:#A6822E;
+    --brass-light:#C9A44C;
+    --income:#2F6B4E;
+    --income-soft:#DCE9DF;
+    --expense:#9C3B2E;
+    --expense-soft:#F1DED8;
+    --shadow: 0 12px 30px -14px rgba(18,41,34,0.55);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:
+      radial-gradient(circle at 15% 10%, var(--cover-light) 0%, transparent 45%),
+      linear-gradient(160deg, var(--cover) 0%, var(--cover-dark) 100%);
+    color:var(--ink);
+    min-height:100vh;
+    padding:28px 16px 60px;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  .masthead{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    padding:6px 8px 22px;color:var(--paper-light);
+    flex-wrap:wrap;gap:14px;
+  }
+  .masthead h1{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-weight:700;font-size:34px;margin:0;
+    letter-spacing:0.3px;
+  }
+  .masthead .sub{
+    font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--brass-light);
+    margin-top:4px;font-weight:600;
+  }
+  .stamp{
+    width:112px;height:112px;border-radius:50%;
+    border:3px solid var(--brass-light);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:rotate(-6deg);
+    color:var(--brass-light);
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    flex-shrink:0;
+    background:rgba(255,255,255,0.03);
+    position:relative;
+  }
+  .stamp::before{
+    content:'';position:absolute;inset:6px;border:1px dashed var(--brass-light);border-radius:50%;opacity:0.5;
+  }
+  .stamp .lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.85;}
+  .stamp .lbl2{font-size:8.5px;letter-spacing:1px;text-transform:uppercase;opacity:0.7;margin-top:1px;}
+  .stamp .val{font-size:17px;font-weight:700;margin-top:3px;}
+  .stamp.neg{border-color:#D98B7B;color:#D98B7B;}
+  .stamp.neg::before{border-color:#D98B7B;}
+  .tabs{display:flex;gap:6px;padding:0 8px;flex-wrap:wrap;}
+  .tab-btn{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-weight:600;font-size:13.5px;
+    padding:10px 18px 12px;border:none;cursor:pointer;
+    background:var(--cover-light);color:var(--paper-light);opacity:0.65;
+    border-radius:8px 8px 0 0;
+    transition:all .15s ease;
+  }
+  .tab-btn:hover{opacity:0.9;}
+  .tab-btn.active{
+    background:var(--paper);color:var(--ink);opacity:1;
+  }
+  .sheet{
+    background:var(--paper);border-radius:4px 14px 14px 14px;
+    box-shadow:var(--shadow);
+    padding:26px 24px 30px;
+  }
+  h2.section-title{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:20px;margin:0 0 4px;color:var(--ink);
+    display:flex;align-items:center;gap:10px;
+  }
+  .section-title .n{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--brass);
+    border:1px solid var(--brass);border-radius:20px;padding:2px 8px;
+  }
+  .section-desc{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;}
+  @media(max-width:640px){.grid3{grid-template-columns:1fr;}}
+  .card{
+    background:var(--paper-light);border:1px solid var(--rule);border-radius:10px;
+    padding:14px 16px;
+  }
+  .card .k{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft);font-weight:600;}
+  .card .v{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;margin-top:4px;}
+  .card.income .v{color:var(--income);}
+  .card.expense .v{color:var(--expense);}
+  .card.saldo .v.pos{color:var(--income);}
+  .card.saldo .v.neg{color:var(--expense);}
+  .rowbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+  select, input[type=date], input[type=text], input[type=number]{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:13.5px;
+    border:1px solid var(--rule);background:var(--paper-light);color:var(--ink);
+    border-radius:7px;padding:8px 10px;width:100%;min-width:0;
+  }
+  select:focus, input:focus{outline:2px solid var(--brass-light);outline-offset:1px;}
+  label.small{font-size:11.5px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{
+    text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.6px;
+    color:var(--ink-soft);padding:6px 8px;border-bottom:2px solid var(--ink);font-weight:700;
+  }
+  td{padding:8px 8px;border-bottom:1px solid var(--rule);vertical-align:middle;}
+  tr:last-child td{border-bottom:1px solid var(--rule);}
+  td.num, th.num{text-align:right;font-family:'IBM Plex Mono',monospace;}
+  td.cat-cell{white-space:nowrap;}
+  .amt-in{color:var(--income);}
+  .amt-out{color:var(--expense);}
+  .badge{
+    display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;
+    text-transform:uppercase;letter-spacing:0.4px;
+  }
+  .badge.in{background:var(--income-soft);color:var(--income);}
+  .badge.out{background:var(--expense-soft);color:var(--expense);}
+  .badge.src{background:#E7E1CC;color:var(--ink-soft);}
+  .icon-btn{
+    background:none;border:1px solid var(--rule);border-radius:6px;cursor:pointer;
+    font-size:12px;padding:4px 8px;color:var(--ink-soft);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  }
+  .icon-btn:hover{background:var(--paper-light);color:var(--ink);}
+  .icon-btn.danger:hover{border-color:var(--expense);color:var(--expense);}
+  .icon-btn.primary{background:var(--cover);color:var(--paper-light);border-color:var(--cover);}
+  .icon-btn.primary:hover{background:var(--cover-light);}
+  .form-card{
+    background:var(--paper-light);border:1px dashed var(--brass);border-radius:10px;
+    padding:16px;margin-bottom:22px;
+  }
+  .form-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;align-items:end;}
+  @media(max-width:900px){.form-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+  @media(max-width:640px){.form-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  .form-field{display:flex;flex-direction:column;gap:4px;min-width:0;}
+  .form-actions{display:flex;gap:8px;margin-top:12px;}
+  .chips{display:flex;gap:4px;flex-wrap:wrap;}
+  .chip{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:3px 7px;border-radius:5px;
+    border:1px solid var(--rule);cursor:pointer;background:var(--paper-light);color:var(--ink-soft);
+  }
+  .chip.on{background:var(--brass);border-color:var(--brass);color:#fff;}
+  .chart-svg{width:100%;height:auto;overflow:visible;}
+  .chart-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--ink-soft);}
+  .chart-axis{font-family:'IBM Plex Mono',monospace;font-size:8.5px;fill:var(--ink-soft);}
+  .chart-grid{stroke:var(--rule);stroke-width:1;}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--ink-soft);margin-top:6px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  .dot.in{background:var(--income);} .dot.out{background:var(--expense);}
+  .group-block{margin-bottom:26px;}
+  .group-block h3{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15.5px;margin:0 0 2px;color:var(--cover);
+    border-bottom:1px solid var(--rule);padding-bottom:6px;
+  }
+  .group-total{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);float:right;font-weight:600;}
+  .date-in{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:5px 6px;
+    border:1px solid transparent;background:transparent;color:var(--ink);border-radius:6px;width:132px;
+  }
+  .date-in:hover{border-color:var(--rule);background:var(--paper-light);}
+  .date-in:focus{border-color:var(--brass-light);background:var(--paper-light);outline:none;}
+  .paid-btn{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;
+    border:1px solid var(--rule);background:var(--paper-light);color:var(--ink-soft);cursor:pointer;white-space:nowrap;
+  }
+  .paid-btn:hover{border-color:var(--brass);color:var(--ink);}
+  .paid-btn.on{background:var(--income-soft);border-color:var(--income);color:var(--income);}
+  tr.row-paid td{opacity:0.5;}
+  tr.row-paid td.num{text-decoration:line-through;}
+  .empty-state{
+    text-align:center;padding:36px 20px;color:var(--ink-soft);font-size:13.5px;
+  }
+  .footer-note{
+    text-align:center;color:var(--paper-light);opacity:0.55;font-size:11.5px;margin-top:22px;
+  }
+  .footer-note button{
+    background:none;border:none;color:var(--brass-light);text-decoration:underline;cursor:pointer;font-size:11.5px;
+  }
+  .confirm-box{
+    max-width:960px;margin:10px auto 0;background:var(--expense-soft);border:1px solid var(--expense);
+    color:var(--ink);padding:12px 16px;border-radius:8px;font-size:13px;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  }
+  .loading{color:var(--paper-light);text-align:center;padding:80px 20px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:16px;}
+  .order-cell{display:flex;align-items:center;gap:6px;}
+  .drag-handle{cursor:grab;color:var(--ink-soft);font-size:15px;user-select:none;line-height:1;}
+  .drag-handle:active{cursor:grabbing;}
+  .order-btns{display:flex;flex-direction:column;gap:1px;}
+  .order-btn{
+    background:none;border:1px solid var(--rule);border-radius:3px;cursor:pointer;
+    font-size:8px;line-height:1;padding:1px 3px;color:var(--ink-soft);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  }
+  .order-btn:hover{background:var(--paper-light);color:var(--ink);border-color:var(--brass);}
+  tr[draggable="true"]{cursor:default;}
+  tr.drag-over td{border-top:2px solid var(--brass);}
+  .pm-input{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:10.5px;font-weight:700;
+    border:1px solid var(--rule);background:var(--paper-light);color:var(--ink-soft);
+    border-radius:14px;padding:3px 8px;margin-top:4px;width:136px;
+  }
+  .pm-input.pm-green{background:var(--income-soft);border-color:var(--income);color:var(--income);}
+  .pm-input.pm-red{background:var(--expense-soft);border-color:var(--expense);color:var(--expense);}
+  .pm-input.pm-gold{background:#E3DCC8;border-color:var(--brass);color:var(--brass);}
+  .pm-input.pm-blue{background:#DCE4EC;border-color:#3E5C76;color:#3E5C76;}
+  .pm-input.pm-custom{background:#EFE9DC;border-color:var(--ink-soft);color:var(--ink-soft);}
+  .pm-input.pm-none{background:var(--paper-light);border-color:var(--rule);color:var(--ink-soft);}
+  .fix-subgroup{margin:12px 0 20px;}
+  .fix-subgroup-head{
+    display:flex;justify-content:space-between;align-items:baseline;margin:0 0 4px;
+  }
+  .fix-subgroup-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;
+    letter-spacing:0.8px;color:var(--brass);font-weight:700;
+  }
+  .fix-subgroup-total{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="loading" id="loading">Haushaltsbuch wird geöffnet …</div>
+</div>
+<script>
+/* ---------- Konstanten ---------- */
+const MONTH_ABBR = ['Jan','Feb','Mrz','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+const MONTH_FULL = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const PAYMENT_PRESETS_INCOME = ['Gehalt','Miete','Sonstiges'];
+const PAYMENT_PRESETS_EXPENSE = ['Lastschrift','Dauerauftrag','Überweisung'];
+const PAYMENT_SLUG_MIGRATION = {lastschrift:'Lastschrift', dauerauftrag:'Dauerauftrag', ueberweisung:'Überweisung'};
+const STORAGE_KEY = 'haushaltsbuch-data';
+const DEFAULT_DATA = {
+  recurring: [
+    {id:'inc1', type:'einnahme', group:'Einnahmen', category:'Enrico (Bund)', amount:3096.17, frequency:'monatlich', months:[]},
+    {id:'inc2', type:'einnahme', group:'Einnahmen', category:'Enrico', amount:1023.66, frequency:'monatlich', months:[]},
+    {id:'inc3', type:'einnahme', group:'Einnahmen', category:'Miriam', amount:948.00, frequency:'monatlich', months:[]},
+    {id:'inc4', type:'einnahme', group:'Einnahmen', category:'Kindergeld', amount:518.00, frequency:'monatlich', months:[]},
+    {id:'inc5', type:'einnahme', group:'Einnahmen', category:'Wiebke & Gerd', amount:289.04, frequency:'monatlich', months:[]},
+    {id:'fix1', type:'ausgabe', group:'Fixkosten', category:'Consors', amount:1138.54, frequency:'monatlich', months:[]},
+    {id:'fix2', type:'ausgabe', group:'Fixkosten', category:'BHW', amount:597.98, frequency:'monatlich', months:[]},
+    {id:'fix3', type:'ausgabe', group:'Fixkosten', category:'Unterhalt', amount:554.50, frequency:'monatlich', months:[]},
+    {id:'fix4', type:'ausgabe', group:'Fixkosten', category:'Mama (Auxmoney)', amount:631.70, frequency:'monatlich', months:[]},
+    {id:'fix5', type:'ausgabe', group:'Fixkosten', category:'DKB 1', amount:339.14, frequency:'monatlich', months:[]},
+    {id:'fix6', type:'ausgabe', group:'Fixkosten', category:'ING 1', amount:225.25, frequency:'monatlich', months:[]},
+    {id:'fix7', type:'ausgabe', group:'Fixkosten', category:'DKB 2', amount:169.58, frequency:'monatlich', months:[]},
+    {id:'fix8', type:'ausgabe', group:'Fixkosten', category:'E.ON (Gas)', amount:140.00, frequency:'monatlich', months:[]},
+    {id:'fix9', type:'ausgabe', group:'Fixkosten', category:'Concordia (Privat)', amount:129.96, frequency:'monatlich', months:[]},
+    {id:'fix10', type:'ausgabe', group:'Fixkosten', category:'E.ON (Strom)', amount:86.00, frequency:'monatlich', months:[]},
+    {id:'fix11', type:'ausgabe', group:'Fixkosten', category:'Kravag', amount:55.71, frequency:'monatlich', months:[]},
+    {id:'fix12', type:'ausgabe', group:'Fixkosten', category:'ING 2', amount:55.45, frequency:'monatlich', months:[]},
+    {id:'fix13', type:'ausgabe', group:'Fixkosten', category:'Itzehoer', amount:50.93, frequency:'monatlich', months:[]},
+    {id:'fix14', type:'ausgabe', group:'Fixkosten', category:'Continentale (BU)', amount:44.36, frequency:'monatlich', months:[]},
+    {id:'fix15', type:'ausgabe', group:'Fixkosten', category:'1&1', amount:24.99, frequency:'monatlich', months:[]},
+    {id:'fix16', type:'ausgabe', group:'Fixkosten', category:'Uelzener', amount:22.79, frequency:'monatlich', months:[]},
+    {id:'fix17', type:'ausgabe', group:'Fixkosten', category:'Roland', amount:21.51, frequency:'monatlich', months:[]},
+    {id:'fix18', type:'ausgabe', group:'Fixkosten', category:'WWK', amount:18.00, frequency:'monatlich', months:[]},
+    {id:'fix19', type:'ausgabe', group:'Fixkosten', category:'Dialog', amount:13.51, frequency:'monatlich', months:[]},
+    {id:'oed1', type:'ausgabe', group:'Oederquart', category:'Trinkwasser', amount:70.00, frequency:'monate', months:[1,3,5,7,9,11], day:1},
+    {id:'oed2', type:'ausgabe', group:'Oederquart', category:'Abfall', amount:67.71, frequency:'monate', months:[2,5,8,11], day:15},
+    {id:'oed3', type:'ausgabe', group:'Oederquart', category:'Grundsteuer A', amount:11.34, frequency:'monate', months:[2,8], day:15},
+    {id:'oed4', type:'ausgabe', group:'Oederquart', category:'Grundsteuer B', amount:44.54, frequency:'monate', months:[2,5,8,11], day:15},
+    {id:'oed5', type:'ausgabe', group:'Oederquart', category:'Hundesteuer', amount:12.50, frequency:'monate', months:[2,5,8,11], day:15},
+    {id:'nin1', type:'ausgabe', group:'Nindorf', category:'Debeka', amount:53.61, frequency:'monatlich', months:[], day:1},
+    {id:'nin2', type:'ausgabe', group:'Nindorf', category:'Abfall', amount:45.36, frequency:'monate', months:[2,5,8,11], day:15},
+    {id:'nin3', type:'ausgabe', group:'Nindorf', category:'Untere Oste', amount:122.99, frequency:'monate', months:[4], day:1},
+    {id:'nin4', type:'ausgabe', group:'Nindorf', category:'Kläranlage', amount:75.92, frequency:'monate', months:[2,7], day:1},
+    {id:'nin5', type:'ausgabe', group:'Nindorf', category:'Grundsteuer B', amount:127.18, frequency:'monate', months:[2,5,8,11], day:15}
+  ],
+  transactions: [],
+  kredite: [
+    {id:'kr1', bank:'DKB', offen:26821.60, rate:339.14, typ:'Privat', grundbuch:false},
+    {id:'kr2', bank:'DKB', offen:13605.34, rate:169.58, typ:'Privat', grundbuch:false},
+    {id:'kr3', bank:'ING', offen:4716.57, rate:55.45, typ:'Privat', grundbuch:false},
+    {id:'kr4', bank:'Santander (Auto)', offen:21000.00, rate:286.00, typ:'Privat', grundbuch:false},
+    {id:'kr5', bank:'Auxmoney (Mama)', offen:24400.00, rate:406.70, typ:'Privat', grundbuch:false},
+    {id:'kr6', bank:'Auxmoney (Mama)', offen:15000.00, rate:225.00, typ:'Privat', grundbuch:false},
+    {id:'kr7', bank:'Dispo', offen:10000.00, rate:75.00, typ:'Privat', grundbuch:false},
+    {id:'kr8', bank:'Auxmoney', offen:3000.00, rate:52.00, typ:'Privat', grundbuch:false}
+  ],
+  sonstiges: [
+    {id:'son1', name:'Anlagenkonto', betrag:3300.00, notiz:'Mila: 1950€ · Nilo: 1350€'},
+    {id:'son2', name:'Mama', betrag:30000.00, notiz:''}
+  ],
+  paidMarks: {},
+  dateOverrides: {}
+};
+/* ---------- State ---------- */
+let DATA = null;
+let dragRecKey = null;
+let state = {
+  tab: 'dashboard',
+  selMonth: new Date().getMonth()+1,
+  selYear: new Date().getFullYear(),
+  showAllTxn: false,
+  editTxnId: null,
+  editRecId: null,
+  editKrId: null,
+  editSonId: null,
+  addingRecGroup: null,
+  addingKr: null,
+  addingSon: false,
+  resetConfirm: false
+};
+/* ---------- Storage ---------- */
+const hasCloudStorage = (typeof window.storage !== 'undefined') && window.storage && typeof window.storage.get === 'function';
+async function storageGet(key){
+  if(hasCloudStorage){
+    try{ return await window.storage.get(key, false); }
+    catch(e){ return null; }
+  }
+  try{
+    const raw = localStorage.getItem(key);
+    return raw ? {key, value: raw, shared:false} : null;
+  }catch(e){ return null; }
+}
+async function storageSet(key, value){
+  if(hasCloudStorage){
+    try{ return await window.storage.set(key, value, false); }
+    catch(e){ console.error('Cloud-Speichern fehlgeschlagen', e); return null; }
+  }
+  try{
+    localStorage.setItem(key, value);
+    return {key, value, shared:false};
+  }catch(e){ console.error('Lokales Speichern fehlgeschlagen', e); return null; }
+}
+async function loadData(){
+  try{
+    const res = await storageGet(STORAGE_KEY);
+    if(res && res.value){ DATA = JSON.parse(res.value); }
+    else { DATA = JSON.parse(JSON.stringify(DEFAULT_DATA)); await saveData(); }
+  }catch(e){
+    DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    try{ await saveData(); }catch(e2){}
+  }
+  if(!DATA.paidMarks) DATA.paidMarks = {};
+  if(!DATA.dateOverrides) DATA.dateOverrides = {};
+  DATA.recurring.forEach(r=>{ if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod]; });
+  DATA.transactions.forEach(t=>{ if(PAYMENT_SLUG_MIGRATION[t.paymentMethod]) t.paymentMethod = PAYMENT_SLUG_MIGRATION[t.paymentMethod]; });
+  render();
+}
+async function saveData(){
+  await storageSet(STORAGE_KEY, JSON.stringify(DATA));
+}
+/* ---------- Helpers ---------- */
+function uid(p){ return p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function fmtEUR(n){ n = Number(n)||0; return n.toLocaleString('de-DE',{style:'currency',currency:'EUR'}); }
+function parseNum(str){ if(str===null||str===undefined) return 0; const v = parseFloat(String(str).replace(/\./g,'').replace(',','.')); return isNaN(v)?parseFloat(str)||0:v; }
+function pad2(n){ return String(n).padStart(2,'0'); }
+function esc(s){ const d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
+function recurringActiveInMonth(item, month){
+  return item.frequency==='monatlich' || (item.months||[]).includes(month);
+}
+function monthTotals(year, month){
+  let inc=0, exp=0;
+  DATA.recurring.forEach(r=>{
+    if(recurringActiveInMonth(r, month)){
+      if(r.type==='einnahme') inc+=r.amount; else exp+=r.amount;
+    }
+  });
+  DATA.transactions.forEach(t=>{
+    const d = new Date(t.date+'T00:00:00');
+    if(d.getFullYear()===year && (d.getMonth()+1)===month){
+      if(t.type==='einnahme') inc+=t.amount; else exp+=t.amount;
+    }
+  });
+  return {inc,exp};
+}
+function paidKey(recId, year, month){ return recId+'_'+year+'_'+month; }
+function defaultFixDate(r, year, month){ return `${year}-${pad2(month)}-${pad2(r.day||1)}`; }
+function effectiveFixDate(r, year, month){
+  const k = paidKey(r.id, year, month);
+  return DATA.dateOverrides[k] || defaultFixDate(r, year, month);
+}
+function toggleFixPaid(recId, year, month){
+  const k = paidKey(recId, year, month);
+  if(DATA.paidMarks[k]) delete DATA.paidMarks[k]; else DATA.paidMarks[k] = true;
+  saveData(); render();
+}
+function toggleTxnPaid(id){
+  const t = DATA.transactions.find(x=>x.id===id);
+  if(!t) return;
+  t.paid = !t.paid;
+  saveData(); render();
+}
+function setFixDate(recId, year, month, newDate){
+  if(!newDate) return;
+  const k = paidKey(recId, year, month);
+  const r = DATA.recurring.find(x=>x.id===recId);
+  if(r && newDate === defaultFixDate(r, year, month)){ delete DATA.dateOverrides[k]; }
+  else { DATA.dateOverrides[k] = newDate; }
+  saveData(); render();
+}
+/* Datum-Zelle für die Fixkosten-Vorlagen: bezieht sich auf den in state.selYear/selMonth
+   gewählten Monat (gleiche Auswahl wie in der Übersicht). Immer editierbar — auch bei
+   periodischen Posten (Oederquart/Nindorf) in einem Monat, in dem sie nicht fällig sind. */
+function fixDateCell(r){
+  const d = effectiveFixDate(r, state.selYear, state.selMonth);
+  return `<input type="date" class="date-in" value="${d}" onchange="setFixDate('${r.id}', ${state.selYear}, ${state.selMonth}, this.value)">`;
+}
+function typeBadge(type){
+  return `<span class="badge ${type==='einnahme'?'in':'out'}">${type==='einnahme'?'Einnahme':'Ausgabe'}</span>`;
+}
+/* ---------- Zahlungsart / Beschreibung (frei eintragbar, mit Vorschlägen) ---------- */
+function setFixPaymentMethod(recId, value){
+  const r = DATA.recurring.find(x=>x.id===recId);
+  if(!r) return;
+  r.paymentMethod = value;
+  saveData(); render();
+}
+function setTxnPaymentMethod(id, value){
+  const t = DATA.transactions.find(x=>x.id===id);
+  if(!t) return;
+  t.paymentMethod = value;
+  saveData(); render();
+}
+function paymentMethodClass(type, value){
+  const v = (value||'').trim();
+  if(!v) return 'pm-none';
+  if(type==='einnahme') return 'pm-green';
+  const lv = v.toLowerCase();
+  if(lv==='lastschrift') return 'pm-red';
+  if(lv==='dauerauftrag') return 'pm-blue';
+  if(lv==='überweisung' || lv==='ueberweisung') return 'pm-gold';
+  return 'pm-custom';
+}
+function pmBucket(value){
+  const v = (value||'').trim().toLowerCase();
+  if(v==='lastschrift') return 'Lastschrift';
+  if(v==='dauerauftrag') return 'Dauerauftrag';
+  if(v==='überweisung' || v==='ueberweisung') return 'Überweisung';
+  return 'Sonstige';
+}
+function paymentMethodInput(kind, id, type, value){
+  const listId = type==='einnahme' ? 'pm-list-income' : 'pm-list-expense';
+  const cls = paymentMethodClass(type, value);
+  const handler = kind==='fix' ? `setFixPaymentMethod('${id}', this.value)` : `setTxnPaymentMethod('${id}', this.value)`;
+  return `<input type="text" class="pm-input ${cls}" list="${listId}" value="${esc(value||'')}" placeholder="– eintragen –" onchange="${handler}">`;
+}
+function allCategories(){
+  const set = new Set();
+  DATA.recurring.forEach(r=>set.add(r.category));
+  DATA.transactions.forEach(t=>set.add(t.category));
+  return [...set];
+}
+/* ---------- Render root ---------- */
+function render(){
+  const wrap = document.getElementById('wrap');
+  const {inc,exp} = monthTotals(state.selYear, state.selMonth);
+  const saldo = inc-exp;
+  wrap.innerHTML = `
+    <div class="masthead">
+      <div>
+        <h1>Haushaltsbuch</h1>
+        <div class="sub">Einnahmen &amp; Ausgaben im Blick</div>
+      </div>
+      <div class="stamp ${saldo<0?'neg':''}">
+        <div class="lbl">Saldo</div>
+        <div class="lbl2">${MONTH_FULL[state.selMonth-1]} ${state.selYear}</div>
+        <div class="val">${fmtEUR(saldo)}</div>
+      </div>
+    </div>
+    <datalist id="pm-list-income"><option value="Gehalt"><option value="Miete"><option value="Sonstiges"></datalist>
+    <datalist id="pm-list-expense"><option value="Lastschrift"><option value="Dauerauftrag"><option value="Überweisung"></datalist>
+    <datalist id="pm-list-all"><option value="Gehalt"><option value="Miete"><option value="Sonstiges"><option value="Lastschrift"><option value="Dauerauftrag"><option value="Überweisung"></datalist>
+    <div class="tabs">
+      ${tabBtn('dashboard','Übersicht')}
+      ${tabBtn('buchungen','Buchungen')}
+      ${tabBtn('fixkosten','Fixkosten')}
+      ${tabBtn('kredite','Kredite')}
+    </div>
+    <div class="sheet flat" id="sheet"></div>
+    ${state.resetConfirm ? `
+      <div class="confirm-box">
+        <span>Wirklich alle Daten auf die ursprünglichen Werte aus der Excel-Datei zurücksetzen? Eigene Buchungen und Änderungen gehen verloren.</span>
+        <span style="display:flex;gap:8px;">
+          <button class="icon-btn danger" onclick="doReset()">Ja, zurücksetzen</button>
+          <button class="icon-btn" onclick="state.resetConfirm=false; render();">Abbrechen</button>
+        </span>
+      </div>` : ''}
+    <div class="footer-note">${hasCloudStorage ? 'Daten werden in diesem Chat gespeichert' : 'Daten werden lokal in diesem Browser auf diesem Rechner gespeichert'} · <button onclick="state.resetConfirm=true; render();">Auf Ausgangsdaten zurücksetzen</button></div>
+  `;
+  const sheet = document.getElementById('sheet');
+  if(state.tab==='dashboard') sheet.innerHTML = renderDashboard();
+  if(state.tab==='buchungen') sheet.innerHTML = renderBuchungen();
+  if(state.tab==='fixkosten') sheet.innerHTML = renderFixkosten();
+  if(state.tab==='kredite') sheet.innerHTML = renderKredite();
+  afterRenderHooks();
+}
+function tabBtn(id,label){
+  return `<button class="tab-btn ${state.tab===id?'active':''}" onclick="switchTab('${id}')">${label}</button>`;
+}
+function switchTab(id){ state.tab=id; state.editTxnId=null; state.editRecId=null; state.editKrId=null; state.editSonId=null; state.resetConfirm=false; render(); }
+/* ---------- Dashboard ---------- */
+function renderDashboard(){
+  const {inc,exp} = monthTotals(state.selYear, state.selMonth);
+  const saldo = inc-exp;
+  const incArr=[], expArr=[];
+  for(let m=1;m<=12;m++){ const t=monthTotals(state.selYear,m); incArr.push(t.inc); expArr.push(t.exp); }
+  return `
+    <h2 class="section-title">Übersicht <span class="n">${MONTH_FULL[state.selMonth-1]} ${state.selYear}</span></h2>
+    <p class="section-desc">Fixkosten laufen automatisch mit, deine eigenen Buchungen kommen aus dem Reiter „Buchungen" dazu.</p>
+    <div class="rowbar">
+      <div class="form-field"><label class="small">Monat</label>${monthSelect()}</div>
+      <div class="form-field"><label class="small">Jahr</label>${yearSelect()}</div>
+    </div>
+    <div class="grid3">
+      <div class="card income"><div class="k">Einnahmen</div><div class="v">${fmtEUR(inc)}</div></div>
+      <div class="card expense"><div class="k">Ausgaben</div><div class="v">${fmtEUR(exp)}</div></div>
+      <div class="card saldo"><div class="k">Saldo</div><div class="v ${saldo>=0?'pos':'neg'}">${fmtEUR(saldo)}</div></div>
+    </div>
+    <h3 style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;margin:0 0 6px;">Jahresverlauf ${state.selYear}</h3>
+    ${svgChart(incArr, expArr, state.selMonth-1)}
+    <div class="legend"><span><i class="dot in"></i>Einnahmen</span><span><i class="dot out"></i>Ausgaben</span></div>
+    <h3 style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;margin:26px 0 22px;">Alle Buchungen im ${MONTH_FULL[state.selMonth-1]}</h3>
+    ${renderDashboardGroups()}
+  `;
+}
+/* Bildet die Struktur des Fixkosten-Tabs 1:1 ab (gleiche Gruppen, gleiche Unterteilung nach
+   Zahlungsart, gleiche Reihenfolge wie in DATA.recurring), beschränkt auf die in diesem Monat
+   fälligen Posten, plus eine zusätzliche Gruppe für die manuellen Buchungen. Nur der Status
+   lässt sich hier direkt umschalten — alles andere wird im jeweiligen Reiter gepflegt. */
+function renderDashboardGroups(){
+  const groups = ['Einnahmen','Fixkosten','Oederquart','Nindorf'];
+  const html = groups.map(g=>renderDashboardGroup(g)).join('') + renderDashboardManualGroup();
+  return html || `<div class="empty-state">Keine Buchungen in diesem Monat.</div>`;
+}
+function renderDashboardGroup(group){
+  const type = group==='Einnahmen' ? 'einnahme' : 'ausgabe';
+  const items = DATA.recurring.filter(r=>r.group===group && recurringActiveInMonth(r, state.selMonth));
+  if(group==='Fixkosten') return renderDashboardFixGroup(items);
+  if(!items.length) return '';
+  const total = items.reduce((s,r)=>s+r.amount,0);
+  return `
+    <div class="group-block">
+      <h3>${GROUP_LABEL[group]} <span class="group-total ${type==='einnahme'?'amt-in':'amt-out'}">${fmtEUR(total)}</span></h3>
+      <table>
+        <thead><tr><th>Datum</th><th>Bezeichnung</th><th>Typ</th><th>Zahlungsart</th><th class="num">Betrag</th><th>Status</th></tr></thead>
+        <tbody>${items.map(r=>dashRecRow(r)).join('')}</tbody>
+      </table>
+    </div>
+  `;
+}
+function renderDashboardFixGroup(items){
+  if(!items.length) return '';
+  const total = items.reduce((s,r)=>s+r.amount,0);
+  const subHtml = FIX_BUCKETS.map(b=>{
+    const bucketItems = items.filter(r=>pmBucket(r.paymentMethod)===b.key);
+    if(!bucketItems.length) return '';
+    const subtotal = bucketItems.reduce((s,r)=>s+r.amount,0);
+    return `
+      <div class="fix-subgroup">
+        <div class="fix-subgroup-head">
+          <span class="fix-subgroup-label">${esc(b.label)}</span>
+          <span class="fix-subgroup-total amt-out">${fmtEUR(subtotal)}</span>
+        </div>
+        <table>
+          <thead><tr><th>Datum</th><th>Bezeichnung</th><th>Typ</th><th>Zahlungsart</th><th class="num">Betrag</th><th>Status</th></tr></thead>
+          <tbody>${bucketItems.map(r=>dashRecRow(r)).join('')}</tbody>
+        </table>
+      </div>`;
+  }).join('');
+  return `
+    <div class="group-block">
+      <h3>${GROUP_LABEL.Fixkosten} <span class="group-total amt-out">${fmtEUR(total)}</span></h3>
+      ${subHtml}
+    </div>
+  `;
+}
+function renderDashboardManualGroup(){
+  const list = DATA.transactions.filter(t=>{
+    const d = new Date(t.date+'T00:00:00');
+    return d.getFullYear()===state.selYear && (d.getMonth()+1)===state.selMonth;
+  }).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!list.length) return '';
+  const total = list.reduce((s,t)=>s+t.amount,0);
+  return `
+    <div class="group-block">
+      <h3>Buchungen <span class="group-total">${fmtEUR(total)}</span></h3>
+      <table>
+        <thead><tr><th>Datum</th><th>Bezeichnung</th><th>Typ</th><th>Zahlungsart</th><th class="num">Betrag</th><th>Status</th></tr></thead>
+        <tbody>${list.map(t=>dashTxnRow(t)).join('')}</tbody>
+      </table>
+    </div>
+  `;
+}
+function dashRecRow(r){
+  const dateTxt = formatDate(effectiveFixDate(r, state.selYear, state.selMonth));
+  const k = paidKey(r.id, state.selYear, state.selMonth);
+  const paid = !!DATA.paidMarks[k];
+  return `<tr class="${paid?'row-paid':''}">
+    <td>${dateTxt}</td>
+    <td>${esc(r.category)}</td>
+    <td>${typeBadge(r.type)}</td>
+    <td><span class="pm-input ${paymentMethodClass(r.type, r.paymentMethod)}" style="cursor:default;">${esc(r.paymentMethod||'–')}</span></td>
+    <td class="num ${r.type==='einnahme'?'amt-in':'amt-out'}">${fmtEUR(r.amount)}</td>
+    <td><button class="paid-btn ${paid?'on':''}" onclick="toggleFixPaid('${r.id}', ${state.selYear}, ${state.selMonth})">${paid?'✓ Bezahlt':'Offen'}</button></td>
+  </tr>`;
+}
+function dashTxnRow(t){
+  return `<tr class="${t.paid?'row-paid':''}">
+    <td>${formatDate(t.date)}</td>
+    <td>${esc(t.category)}${t.description ? '<br><span style="color:var(--ink-soft);font-size:11.5px;">'+esc(t.description)+'</span>' : ''}</td>
+    <td>${typeBadge(t.type)}</td>
+    <td><span class="pm-input ${paymentMethodClass(t.type, t.paymentMethod)}" style="cursor:default;">${esc(t.paymentMethod||'–')}</span></td>
+    <td class="num ${t.type==='einnahme'?'amt-in':'amt-out'}">${t.type==='einnahme'?'+':'−'} ${fmtEUR(Math.abs(t.amount))}</td>
+    <td><button class="paid-btn ${t.paid?'on':''}" onclick="toggleTxnPaid('${t.id}')">${t.paid?'✓ Bezahlt':'Offen'}</button></td>
+  </tr>`;
+}
+function monthSelect(){
+  let opts = MONTH_FULL.map((m,i)=>`<option value="${i+1}" ${state.selMonth===i+1?'selected':''}>${m}</option>`).join('');
+  return `<select onchange="state.selMonth=parseInt(this.value); render();">${opts}</select>`;
+}
+function yearSelect(){
+  const cy = new Date().getFullYear();
+  let years = [];
+  for(let y=cy-2;y<=cy+2;y++) years.push(y);
+  let opts = years.map(y=>`<option value="${y}" ${state.selYear===y?'selected':''}>${y}</option>`).join('');
+  return `<select onchange="state.selYear=parseInt(this.value); render();">${opts}</select>`;
+}
+function formatDate(iso){
+  const d = new Date(iso+'T00:00:00');
+  return pad2(d.getDate())+'.'+pad2(d.getMonth()+1)+'.'+d.getFullYear();
+}
+function svgChart(incomeArr, expenseArr, highlightIdx){
+  const w=740,h=230,padL=44,padR=8,padT=14,padB=26;
+  const chartW=w-padL-padR, chartH=h-padT-padB;
+  const max = Math.max(1, ...incomeArr, ...expenseArr)*1.15;
+  const groupW = chartW/12;
+  const barW = groupW*0.32;
+  let bars='', grid='';
+  for(let g=0; g<=4; g++){
+    const gy = padT + chartH - (chartH*g/4);
+    grid += `<line x1="${padL}" y1="${gy}" x2="${w-padR}" y2="${gy}" class="chart-grid"/>`;
+    grid += `<text x="${padL-6}" y="${gy+3}" text-anchor="end" class="chart-axis">${Math.round(max*g/4)}</text>`;
+  }
+  for(let i=0;i<12;i++){
+    const gx = padL + i*groupW;
+    const incH = (incomeArr[i]/max)*chartH;
+    const expH = (expenseArr[i]/max)*chartH;
+    const incX = gx + groupW*0.14;
+    const expX = incX + barW + 3;
+    const highlight = i===highlightIdx;
+    bars += `<rect x="${incX}" y="${padT+chartH-incH}" width="${barW}" height="${incH}" rx="2" fill="var(--income)" opacity="${highlight?1:0.7}"/>`;
+    bars += `<rect x="${expX}" y="${padT+chartH-expH}" width="${barW}" height="${expH}" rx="2" fill="var(--expense)" opacity="${highlight?1:0.7}"/>`;
+    bars += `<text x="${gx+groupW/2}" y="${h-8}" text-anchor="middle" class="chart-label" ${highlight?'font-weight="700" fill="var(--ink)"':''}>${MONTH_ABBR[i]}</text>`;
+  }
+  return `<svg viewBox="0 0 ${w} ${h}" class="chart-svg">${grid}${bars}</svg>`;
+}
+/* ---------- Buchungen ---------- */
+function renderBuchungen(){
+  const editing = state.editTxnId ? DATA.transactions.find(t=>t.id===state.editTxnId) : null;
+  const cats = allCategories();
+  const datalist = `<datalist id="catlist">${cats.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>`;
+  let list = DATA.transactions.slice().sort((a,b)=>b.date.localeCompare(a.date));
+  if(!state.showAllTxn){
+    list = list.filter(t=>{
+      const d = new Date(t.date+'T00:00:00');
+      return d.getFullYear()===state.selYear && (d.getMonth()+1)===state.selMonth;
+    });
+  }
+  return `
+    <h2 class="section-title">Buchungen</h2>
+    <p class="section-desc">Trage hier deine tatsächlichen Einnahmen und Ausgaben ein — zusätzlich zu den automatischen Fixkosten.</p>
+    ${datalist}
+    <div class="form-card">
+      <div class="form-grid">
+        <div class="form-field"><label class="small">Datum</label><input type="date" id="f-date" value="${editing?editing.date:new Date().toISOString().slice(0,10)}"></div>
+        <div class="form-field"><label class="small">Typ</label>
+          <select id="f-type">
+            <option value="ausgabe" ${editing&&editing.type==='ausgabe'?'selected':''}>Ausgabe</option>
+            <option value="einnahme" ${editing&&editing.type==='einnahme'?'selected':''}>Einnahme</option>
+          </select>
+        </div>
+        <div class="form-field"><label class="small">Kategorie</label><input type="text" id="f-cat" list="catlist" placeholder="z. B. Lebensmittel" value="${editing?esc(editing.category):''}"></div>
+        <div class="form-field"><label class="small">Beschreibung</label><input type="text" id="f-desc" placeholder="optional" value="${editing?esc(editing.description||''):''}"></div>
+        <div class="form-field"><label class="small">Zahlungsart / Beschreibung</label><input type="text" id="f-pm" list="pm-list-all" placeholder="Gehalt, Lastschrift, eigener Text …" value="${editing?esc(editing.paymentMethod||''):''}"></div>
+        <div class="form-field"><label class="small">Betrag (€)</label><input type="text" inputmode="decimal" id="f-amt" placeholder="0,00" value="${editing?String(editing.amount).replace('.',','):''}"></div>
+      </div>
+      <div class="form-actions">
+        <button class="icon-btn primary" onclick="submitTxn()">${editing?'Änderung speichern':'Buchung hinzufügen'}</button>
+        ${editing?'<button class="icon-btn" onclick="state.editTxnId=null; render();">Abbrechen</button>':''}
+      </div>
+    </div>
+    <div class="rowbar">
+      <label class="small" style="display:flex;align-items:center;gap:6px;text-transform:none;">
+        <input type="checkbox" id="f-showall" ${state.showAllTxn?'checked':''} onchange="state.showAllTxn=this.checked; render();"> Alle Buchungen anzeigen (statt nur ${MONTH_ABBR[state.selMonth-1]} ${state.selYear})
+      </label>
+    </div>
+    <table>
+      <thead><tr><th>Datum</th><th>Kategorie</th><th>Beschreibung</th><th>Typ</th><th>Zahlungsart</th><th class="num">Betrag</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      ${list.length ? list.map(t=>`
+        <tr class="${t.paid?'row-paid':''}">
+          <td>${formatDate(t.date)}</td>
+          <td>${esc(t.category)}</td>
+          <td style="color:var(--ink-soft);">${esc(t.description||'')}</td>
+          <td><span class="badge ${t.type==='einnahme'?'in':'out'}">${t.type==='einnahme'?'Einnahme':'Ausgabe'}</span></td>
+          <td>${paymentMethodInput('txn', t.id, t.type, t.paymentMethod)}</td>
+          <td class="num ${t.type==='einnahme'?'amt-in':'amt-out'}">${t.type==='einnahme'?'+':'−'} ${fmtEUR(Math.abs(t.amount))}</td>
+          <td><button class="paid-btn ${t.paid?'on':''}" onclick="toggleTxnPaid('${t.id}')">${t.paid?'✓ Bezahlt':'Offen'}</button></td>
+          <td style="white-space:nowrap;">
+            <button class="icon-btn" onclick="editTxn('${t.id}')">✎</button>
+            <button class="icon-btn danger" onclick="deleteTxn('${t.id}')">✕</button>
+          </td>
+        </tr>`).join('') : `<tr><td colspan="8"><div class="empty-state">Noch keine Buchungen erfasst.</div></td></tr>`}
+      </tbody>
+    </table>
+  `;
+}
+function submitTxn(){
+  const date = document.getElementById('f-date').value;
+  const type = document.getElementById('f-type').value;
+  const category = document.getElementById('f-cat').value.trim();
+  const description = document.getElementById('f-desc').value.trim();
+  const paymentMethod = document.getElementById('f-pm').value;
+  const amount = Math.abs(parseNum(document.getElementById('f-amt').value));
+  if(!date || !category || !amount){ return; }
+  if(state.editTxnId){
+    const t = DATA.transactions.find(x=>x.id===state.editTxnId);
+    Object.assign(t, {date,type,category,description,paymentMethod,amount});
+    state.editTxnId = null;
+  } else {
+    DATA.transactions.push({id:uid('txn'), date, type, category, description, paymentMethod, amount});
+  }
+  saveData(); render();
+}
+function editTxn(id){ state.editTxnId = id; render(); }
+function deleteTxn(id){ DATA.transactions = DATA.transactions.filter(t=>t.id!==id); saveData(); render(); }
+/* ---------- Fixkosten ---------- */
+const GROUP_LABEL = {Einnahmen:'Einnahmen (monatlich)', Fixkosten:'Fixkosten (monatlich)', Oederquart:'Oederquart (periodisch)', Nindorf:'Nindorf (periodisch)'};
+const FIX_BUCKETS = [
+  {key:'Lastschrift', label:'Lastschrift'},
+  {key:'Dauerauftrag', label:'Dauerauftrag'},
+  {key:'Überweisung', label:'Überweisung'},
+  {key:'Sonstige', label:'Ohne Zahlungsart'}
+];
+function renderFixkosten(){
+  const groups = ['Einnahmen','Fixkosten','Oederquart','Nindorf'];
+  return `
+    <h2 class="section-title">Fixkosten &amp; wiederkehrende Posten</h2>
+    <p class="section-desc">Diese Vorlagen fließen automatisch in jeden passenden Monat der Übersicht ein. Aus deiner Excel-Datei übernommen — hier frei anpassbar. Das Datum bezieht sich auf den gewählten Monat; Zeilen lassen sich per Pfeil-Buttons oder Drag&amp;Drop verschieben.</p>
+    <div class="rowbar">
+      <div class="form-field"><label class="small">Monat</label>${monthSelect()}</div>
+      <div class="form-field"><label class="small">Jahr</label>${yearSelect()}</div>
+    </div>
+    ${groups.map(g=>renderRecGroup(g)).join('')}
+  `;
+}
+function renderRecGroup(group){
+  const items = DATA.recurring.filter(r=>r.group===group);
+  const total = items.reduce((s,r)=>s+r.amount,0);
+  const isPeriodic = group==='Oederquart' || group==='Nindorf';
+  const type = group==='Einnahmen' ? 'einnahme' : 'ausgabe';
+  if(group==='Fixkosten'){
+    return renderFixkostenGroup(total, type);
+  }
+  return `
+    <div class="group-block">
+      <h3>${GROUP_LABEL[group]} <span class="group-total ${type==='einnahme'?'amt-in':'amt-out'}">${fmtEUR(total)} / Monat*</span></h3>
+      <table>
+        <thead><tr><th style="width:44px;"></th><th>Datum</th><th>Bezeichnung</th><th>${isPeriodic?'Fällige Monate':''}</th><th>Typ</th><th>Zahlungsart</th><th class="num">Betrag</th><th></th></tr></thead>
+        <tbody>
+        ${items.map(r=> state.editRecId===r.id ? recEditRow(r, isPeriodic) : recRow(r, isPeriodic)).join('')}
+        ${state.addingRecGroup===group ? recAddRow(group, isPeriodic, type) : `<tr><td colspan="8"><button class="icon-btn" onclick="state.addingRecGroup='${group}'; render();">+ Position hinzufügen</button></td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function renderFixkostenGroup(total, type){
+  const group = 'Fixkosten';
+  const subHtml = FIX_BUCKETS.map(b=>renderFixSubgroup(group, b.key, b.label)).join('');
+  return `
+    <div class="group-block">
+      <h3>${GROUP_LABEL[group]} <span class="group-total amt-out">${fmtEUR(total)} / Monat*</span></h3>
+      ${subHtml || `<div class="empty-state">Keine Positionen vorhanden.</div>`}
+      ${state.addingRecGroup===group
+        ? `<table><tbody>${recAddRow(group, false, type)}</tbody></table>`
+        : `<div style="margin-top:4px;"><button class="icon-btn" onclick="state.addingRecGroup='${group}'; render();">+ Position hinzufügen</button></div>`}
+    </div>
+  `;
+}
+function renderFixSubgroup(group, bucketKey, label){
+  const items = DATA.recurring.filter(r=>r.group===group && pmBucket(r.paymentMethod)===bucketKey);
+  if(!items.length) return '';
+  const subtotal = items.reduce((s,r)=>s+r.amount,0);
+  return `
+    <div class="fix-subgroup">
+      <div class="fix-subgroup-head">
+        <span class="fix-subgroup-label">${esc(label)}</span>
+        <span class="fix-subgroup-total amt-out">${fmtEUR(subtotal)}</span>
+      </div>
+      <table>
+        <thead><tr><th style="width:44px;"></th><th>Datum</th><th>Bezeichnung</th><th></th><th>Typ</th><th>Zahlungsart</th><th class="num">Betrag</th><th></th></tr></thead>
+        <tbody>
+        ${items.map(r=> state.editRecId===r.id ? recEditRow(r,false) : recRow(r,false)).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function monthChips(selected, inputId){
+  return `<div class="chips" id="${inputId}">${MONTH_ABBR.map((m,i)=>`<span class="chip ${selected.includes(i+1)?'on':''}" data-m="${i+1}" onclick="this.classList.toggle('on')">${m}</span>`).join('')}</div>`;
+}
+/* ---------- Reihenfolge (Fixkosten-Tab): Pfeile + Drag&Drop ---------- */
+function recVisualList(item){
+  if(item.group==='Fixkosten'){
+    const bucket = pmBucket(item.paymentMethod);
+    return DATA.recurring.filter(x=>x.group==='Fixkosten' && pmBucket(x.paymentMethod)===bucket);
+  }
+  return DATA.recurring.filter(x=>x.group===item.group);
+}
+function moveRec(id, dir){
+  const r = DATA.recurring.find(x=>x.id===id);
+  if(!r) return;
+  const list = recVisualList(r);
+  const pos = list.findIndex(x=>x.id===id);
+  const newPos = pos+dir;
+  if(newPos<0 || newPos>=list.length) return;
+  const other = list[newPos];
+  const i1 = DATA.recurring.indexOf(r);
+  const i2 = DATA.recurring.indexOf(other);
+  DATA.recurring[i1] = other;
+  DATA.recurring[i2] = r;
+  saveData(); render();
+}
+function onRecDragStart(ev, id){
+  dragRecKey = id;
+  ev.dataTransfer.effectAllowed = 'move';
+  try{ ev.dataTransfer.setData('text/plain', id); }catch(e){}
+}
+function onRecDragOver(ev){
+  ev.preventDefault();
+  ev.dataTransfer.dropEffect = 'move';
+  ev.currentTarget.classList.add('drag-over');
+}
+function onRecDragLeave(ev){
+  ev.currentTarget.classList.remove('drag-over');
+}
+function onRecDropRow(ev, targetId){
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('drag-over');
+  const srcId = dragRecKey;
+  dragRecKey = null;
+  if(!srcId || srcId===targetId) return;
+  const r = DATA.recurring.find(x=>x.id===srcId);
+  const target = DATA.recurring.find(x=>x.id===targetId);
+  if(!r || !target) return;
+  if(r.group!==target.group) return;
+  if(r.group==='Fixkosten' && pmBucket(r.paymentMethod)!==pmBucket(target.paymentMethod)) return;
+  const i1 = DATA.recurring.indexOf(r);
+  DATA.recurring.splice(i1,1);
+  const i2 = DATA.recurring.indexOf(target);
+  DATA.recurring.splice(i2,0,r);
+  saveData(); render();
+}
+function recRow(r, isPeriodic){
+  return `<tr draggable="true"
+      ondragstart="onRecDragStart(event,'${r.id}')"
+      ondragover="onRecDragOver(event)"
+      ondragleave="onRecDragLeave(event)"
+      ondrop="onRecDropRow(event,'${r.id}')">
+    <td>
+      <div class="order-cell">
+        <span class="drag-handle" title="Ziehen zum Verschieben">⠿</span>
+        <span class="order-btns">
+          <button class="order-btn" title="Nach oben" onclick="moveRec('${r.id}', -1)">▲</button>
+          <button class="order-btn" title="Nach unten" onclick="moveRec('${r.id}', 1)">▼</button>
+        </span>
+      </div>
+    </td>
+    <td>${fixDateCell(r)}</td>
+    <td class="cat-cell">${esc(r.category)}</td>
+    <td>${isPeriodic ? r.months.map(m=>MONTH_ABBR[m-1]).join(', ') : 'jeden Monat'}</td>
+    <td>${typeBadge(r.type)}</td>
+    <td>${paymentMethodInput('fix', r.id, r.type, r.paymentMethod)}</td>
+    <td class="num ${r.type==='einnahme'?'amt-in':'amt-out'}">${fmtEUR(r.amount)}</td>
+    <td style="white-space:nowrap;"><button class="icon-btn" onclick="state.editRecId='${r.id}'; render();">✎</button> <button class="icon-btn danger" onclick="deleteRec('${r.id}')">✕</button></td>
+  </tr>`;
+}
+function recEditRow(r, isPeriodic){
+  return `<tr>
+    <td></td>
+    <td>${fixDateCell(r)}</td>
+    <td><input type="text" id="er-cat" value="${esc(r.category)}" style="width:100%;"></td>
+    <td>${isPeriodic ? monthChips(r.months,'er-months') : '<span style="color:var(--ink-soft);">jeden Monat</span>'}</td>
+    <td>${typeBadge(r.type)}</td>
+    <td>${paymentMethodInput('fix', r.id, r.type, r.paymentMethod)}</td>
+    <td class="num"><input type="text" inputmode="decimal" id="er-amt" value="${String(r.amount).replace('.',',')}" style="width:90px;text-align:right;"></td>
+    <td style="white-space:nowrap;"><button class="icon-btn primary" onclick="saveRec('${r.id}', ${isPeriodic})">✓</button> <button class="icon-btn" onclick="state.editRecId=null; render();">✕</button></td>
+  </tr>`;
+}
+function recAddRow(group, isPeriodic, type){
+  return `<tr>
+    <td></td>
+    <td><span style="color:var(--ink-soft);font-size:12px;">–</span></td>
+    <td><input type="text" id="nr-cat" placeholder="Bezeichnung" style="width:100%;"></td>
+    <td>${isPeriodic ? monthChips([],'nr-months') : '<span style="color:var(--ink-soft);">jeden Monat</span>'}</td>
+    <td>${typeBadge(type)}</td>
+    <td><input type="text" id="nr-pm" list="${type==='einnahme'?'pm-list-income':'pm-list-expense'}" placeholder="– eintragen –"></td>
+    <td class="num"><input type="text" inputmode="decimal" id="nr-amt" placeholder="0,00" style="width:90px;text-align:right;"></td>
+    <td style="white-space:nowrap;"><button class="icon-btn primary" onclick="addRec('${group}', ${isPeriodic}, '${type}')">✓</button> <button class="icon-btn" onclick="state.addingRecGroup=null; render();">✕</button></td>
+  </tr>`;
+}
+function getCheckedMonths(containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return [];
+  return [...el.querySelectorAll('.chip.on')].map(c=>parseInt(c.dataset.m));
+}
+function saveRec(id, isPeriodic){
+  const r = DATA.recurring.find(x=>x.id===id);
+  r.category = document.getElementById('er-cat').value.trim() || r.category;
+  r.amount = Math.abs(parseNum(document.getElementById('er-amt').value));
+  if(isPeriodic){ r.months = getCheckedMonths('er-months'); r.frequency='monate'; }
+  state.editRecId = null; saveData(); render();
+}
+function addRec(group, isPeriodic, type){
+  const cat = document.getElementById('nr-cat').value.trim();
+  const amt = Math.abs(parseNum(document.getElementById('nr-amt').value));
+  const paymentMethod = document.getElementById('nr-pm').value;
+  if(!cat || !amt) return;
+  const months = isPeriodic ? getCheckedMonths('nr-months') : [];
+  DATA.recurring.push({id:uid('rec'), type, group, category:cat, amount:amt, paymentMethod, frequency: isPeriodic?'monate':'monatlich', months});
+  state.addingRecGroup = null; saveData(); render();
+}
+function deleteRec(id){ DATA.recurring = DATA.recurring.filter(r=>r.id!==id); saveData(); render(); }
+/* ---------- Kredite ---------- */
+function renderKredite(){
+  const normal = DATA.kredite.filter(k=>!k.grundbuch);
+  const grund = DATA.kredite.filter(k=>k.grundbuch);
+  return `
+    <h2 class="section-title">Kredite</h2>
+    <p class="section-desc">Offene Forderungen und monatliche Raten im Überblick. Zeilen lassen sich per Pfeil-Buttons oder Drag&amp;Drop verschieben.</p>
+    ${krTable(normal, 'normal')}
+    <div class="group-block">
+      <h3>🏠 Kredite im Grundbuch</h3>
+      <p class="section-desc" style="margin-top:-4px;">Grundschuldrechtlich abgesicherte Kredite, separat ausgewiesen.</p>
+      ${krTable(grund, 'grundbuch')}
+    </div>
+    <h3 style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-size:15px;margin:26px 0 10px;">Sonstiges</h3>
+    <table>
+      <thead><tr><th>Bezeichnung</th><th>Notiz</th><th class="num">Betrag</th><th></th></tr></thead>
+      <tbody>
+      ${DATA.sonstiges.map(s=> state.editSonId===s.id ? sonEditRow(s) : sonRow(s)).join('')}
+      ${state.addingSon ? sonAddRow() : `<tr><td colspan="4"><button class="icon-btn" onclick="state.addingSon=true; render();">+ Position hinzufügen</button></td></tr>`}
+      </tbody>
+    </table>
+  `;
+}
+function krTable(items, target){
+  const totalOffen = items.reduce((s,k)=>s+k.offen,0);
+  const totalRate = items.reduce((s,k)=>s+k.rate,0);
+  return `
+    <table>
+      <thead><tr><th style="width:44px;"></th><th>Bank / Gläubiger</th><th>Typ</th><th class="num">Offene Forderung</th><th class="num">Rate mtl.</th><th></th></tr></thead>
+      <tbody>
+      ${items.map(k=> state.editKrId===k.id ? krEditRow(k) : krRow(k)).join('')}
+      ${state.addingKr===target ? krAddRow(target==='grundbuch') : `<tr><td colspan="6"><button class="icon-btn" onclick="state.addingKr='${target}'; render();">+ Kredit hinzufügen</button></td></tr>`}
+      <tr style="font-weight:700;">
+        <td></td><td>Gesamt</td><td></td>
+        <td class="num">${fmtEUR(totalOffen)}</td>
+        <td class="num">${fmtEUR(totalRate)}</td><td></td>
+      </tr>
+      </tbody>
+    </table>
+  `;
+}
+/* ---------- Reihenfolge (Kredite): Pfeile + Drag&Drop ---------- */
+let dragKrKey = null;
+function krVisualList(item){
+  return DATA.kredite.filter(x=>!!x.grundbuch===!!item.grundbuch);
+}
+function moveKr(id, dir){
+  const k = DATA.kredite.find(x=>x.id===id);
+  if(!k) return;
+  const list = krVisualList(k);
+  const pos = list.findIndex(x=>x.id===id);
+  const newPos = pos+dir;
+  if(newPos<0 || newPos>=list.length) return;
+  const other = list[newPos];
+  const i1 = DATA.kredite.indexOf(k);
+  const i2 = DATA.kredite.indexOf(other);
+  DATA.kredite[i1] = other;
+  DATA.kredite[i2] = k;
+  saveData(); render();
+}
+function onKrDragStart(ev, id){
+  dragKrKey = id;
+  ev.dataTransfer.effectAllowed = 'move';
+  try{ ev.dataTransfer.setData('text/plain', id); }catch(e){}
+}
+function onKrDragOver(ev){
+  ev.preventDefault();
+  ev.dataTransfer.dropEffect = 'move';
+  ev.currentTarget.classList.add('drag-over');
+}
+function onKrDragLeave(ev){
+  ev.currentTarget.classList.remove('drag-over');
+}
+function onKrDropRow(ev, targetId){
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('drag-over');
+  const srcId = dragKrKey;
+  dragKrKey = null;
+  if(!srcId || srcId===targetId) return;
+  const k = DATA.kredite.find(x=>x.id===srcId);
+  const target = DATA.kredite.find(x=>x.id===targetId);
+  if(!k || !target) return;
+  if(!!k.grundbuch !== !!target.grundbuch) return;
+  const i1 = DATA.kredite.indexOf(k);
+  DATA.kredite.splice(i1,1);
+  const i2 = DATA.kredite.indexOf(target);
+  DATA.kredite.splice(i2,0,k);
+  saveData(); render();
+}
+function krRow(k){
+  return `<tr draggable="true"
+      ondragstart="onKrDragStart(event,'${k.id}')"
+      ondragover="onKrDragOver(event)"
+      ondragleave="onKrDragLeave(event)"
+      ondrop="onKrDropRow(event,'${k.id}')">
+    <td>
+      <div class="order-cell">
+        <span class="drag-handle" title="Ziehen zum Verschieben">⠿</span>
+        <span class="order-btns">
+          <button class="order-btn" title="Nach oben" onclick="moveKr('${k.id}', -1)">▲</button>
+          <button class="order-btn" title="Nach unten" onclick="moveKr('${k.id}', 1)">▼</button>
+        </span>
+      </div>
+    </td>
+    <td>${esc(k.bank)}</td><td>${esc(k.typ)}</td>
+    <td class="num">${fmtEUR(k.offen)}</td>
+    <td class="num">${fmtEUR(k.rate)}</td>
+    <td style="white-space:nowrap;"><button class="icon-btn" onclick="state.editKrId='${k.id}'; render();">✎</button> <button class="icon-btn danger" onclick="deleteKr('${k.id}')">✕</button></td>
+  </tr>`;
+}
+function krEditRow(k){
+  return `<tr>
+    <td></td>
+    <td><input type="text" id="ek-bank" value="${esc(k.bank)}" style="width:100%;"></td>
+    <td>
+      <input type="text" id="ek-typ" value="${esc(k.typ)}" style="width:90px;">
+      <label style="display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--ink-soft);margin-top:4px;white-space:nowrap;">
+        <input type="checkbox" id="ek-grundbuch" ${k.grundbuch?'checked':''}> Grundbuch
+      </label>
+    </td>
+    <td class="num"><input type="text" inputmode="decimal" id="ek-offen" value="${String(k.offen).replace('.',',')}" style="width:100px;text-align:right;"></td>
+    <td class="num"><input type="text" inputmode="decimal" id="ek-rate" value="${String(k.rate).replace('.',',')}" style="width:90px;text-align:right;"></td>
+    <td style="white-space:nowrap;"><button class="icon-btn primary" onclick="saveKr('${k.id}')">✓</button> <button class="icon-btn" onclick="state.editKrId=null; render();">✕</button></td>
+  </tr>`;
+}
+function krAddRow(defaultGrundbuch){
+  return `<tr>
+    <td></td>
+    <td><input type="text" id="nk-bank" placeholder="Bank / Gläubiger" style="width:100%;"></td>
+    <td>
+      <input type="text" id="nk-typ" placeholder="Typ" value="Privat" style="width:90px;">
+      <label style="display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--ink-soft);margin-top:4px;white-space:nowrap;">
+        <input type="checkbox" id="nk-grundbuch" ${defaultGrundbuch?'checked':''}> Grundbuch
+      </label>
+    </td>
+    <td class="num"><input type="text" inputmode="decimal" id="nk-offen" placeholder="0,00" style="width:100px;text-align:right;"></td>
+    <td class="num"><input type="text" inputmode="decimal" id="nk-rate" placeholder="0,00" style="width:90px;text-align:right;"></td>
+    <td style="white-space:nowrap;"><button class="icon-btn primary" onclick="addKr()">✓</button> <button class="icon-btn" onclick="state.addingKr=null; render();">✕</button></td>
+  </tr>`;
+}
+function saveKr(id){
+  const k = DATA.kredite.find(x=>x.id===id);
+  k.bank = document.getElementById('ek-bank').value.trim() || k.bank;
+  k.typ = document.getElementById('ek-typ').value.trim() || k.typ;
+  k.offen = Math.abs(parseNum(document.getElementById('ek-offen').value));
+  k.rate = Math.abs(parseNum(document.getElementById('ek-rate').value));
+  k.grundbuch = document.getElementById('ek-grundbuch').checked;
+  state.editKrId = null; saveData(); render();
+}
+function addKr(){
+  const bank = document.getElementById('nk-bank').value.trim();
+  const typ = document.getElementById('nk-typ').value.trim() || 'Privat';
+  const offen = Math.abs(parseNum(document.getElementById('nk-offen').value));
+  const rate = Math.abs(parseNum(document.getElementById('nk-rate').value));
+  const grundbuch = document.getElementById('nk-grundbuch').checked;
+  if(!bank) return;
+  DATA.kredite.push({id:uid('kr'), bank, typ, offen, rate, grundbuch});
+  state.addingKr = null; saveData(); render();
+}
+function deleteKr(id){ DATA.kredite = DATA.kredite.filter(k=>k.id!==id); saveData(); render(); }
+function sonRow(s){
+  return `<tr>
+    <td>${esc(s.name)}</td><td style="color:var(--ink-soft);">${esc(s.notiz||'')}</td>
+    <td class="num">${fmtEUR(s.betrag)}</td>
+    <td style="white-space:nowrap;"><button class="icon-btn" onclick="state.editSonId='${s.id}'; render();">✎</button> <button class="icon-btn danger" onclick="deleteSon('${s.id}')">✕</button></td>
+  </tr>`;
+}
+function sonEditRow(s){
+  return `<tr>
+    <td><input type="text" id="es-name" value="${esc(s.name)}" style="width:100%;"></td>
+    <td><input type="text" id="es-notiz" value="${esc(s.notiz||'')}" style="width:100%;"></td>
+    <td class="num"><input type="text" inputmode="decimal" id="es-betrag" value="${String(s.betrag).replace('.',',')}" style="width:100px;text-align:right;"></td>
+    <td style="white-space:nowrap;"><button class="icon-btn primary" onclick="saveSon('${s.id}')">✓</button> <button class="icon-btn" onclick="state.editSonId=null; render();">✕</button></td>
+  </tr>`;
+}
+function sonAddRow(){
+  return `<tr>
+    <td><input type="text" id="ns-name" placeholder="Bezeichnung" style="width:100%;"></td>
+    <td><input type="text" id="ns-notiz" placeholder="Notiz (optional)" style="width:100%;"></td>
+    <td class="num"><input type="text" inputmode="decimal" id="ns-betrag" placeholder="0,00" style="width:100px;text-align:right;"></td>
+    <td style="white-space:nowrap;"><button class="icon-btn primary" onclick="addSon()">✓</button> <button class="icon-btn" onclick="state.addingSon=false; render();">✕</button></td>
+  </tr>`;
+}
+function saveSon(id){
+  const s = DATA.sonstiges.find(x=>x.id===id);
+  s.name = document.getElementById('es-name').value.trim() || s.name;
+  s.notiz = document.getElementById('es-notiz').value.trim();
+  s.betrag = Math.abs(parseNum(document.getElementById('es-betrag').value));
+  state.editSonId = null; saveData(); render();
+}
+function addSon(){
+  const name = document.getElementById('ns-name').value.trim();
+  const notiz = document.getElementById('ns-notiz').value.trim();
+  const betrag = Math.abs(parseNum(document.getElementById('ns-betrag').value));
+  if(!name) return;
+  DATA.sonstiges.push({id:uid('son'), name, notiz, betrag});
+  state.addingSon = false; saveData(); render();
+}
+function deleteSon(id){ DATA.sonstiges = DATA.sonstiges.filter(s=>s.id!==id); saveData(); render(); }
+/* ---------- Reset ---------- */
+async function doReset(){
+  DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  state.resetConfirm = false;
+  await saveData();
+  render();
+}
+function afterRenderHooks(){}
+loadData();
+</script>
+</body>
+</html>
