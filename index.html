@@ -393,6 +393,11 @@ async function firebasePut(obj){
   const res = await fetch(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(obj)});
   if(!res.ok) throw new Error('HTTP '+res.status);
 }
+function isValidBudgetData(obj){
+  return !!(obj && typeof obj==='object'
+    && Array.isArray(obj.recurring) && Array.isArray(obj.transactions)
+    && Array.isArray(obj.kredite) && Array.isArray(obj.sonstiges));
+}
 
 /* -- Laden -- */
 async function loadData(){
@@ -419,6 +424,9 @@ async function loadData(){
     syncStatus = 'syncing'; render();
     try{
       const remote = await firebaseGet();
+      if(remote && !isValidBudgetData(remote)){
+        throw new Error('Ungültige Antwort aus der Cloud-Datenbank (falsche URL oder falscher Schlüssel?)');
+      }
       if(remote){
         if(!local || (remote.updatedAt||0) >= (local.updatedAt||0)){ DATA = remote; ensureShape(); }
         else { await firebasePut(DATA); }
@@ -453,12 +461,18 @@ async function saveData(){
 function startSyncPolling(){
   if(syncPollTimer) clearInterval(syncPollTimer);
   syncPollTimer = setInterval(pullRemoteIfNewer, 20000);
-  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) pullRemoteIfNewer(); });
+  if(!startSyncPolling._listenerAdded){
+    document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) pullRemoteIfNewer(); });
+    startSyncPolling._listenerAdded = true;
+  }
 }
 async function pullRemoteIfNewer(){
   if(!syncConfig || isEditingSomething()) return;
   try{
     const remote = await firebaseGet();
+    if(remote && !isValidBudgetData(remote)){
+      throw new Error('Ungültige Antwort aus der Cloud-Datenbank (falsche URL oder falscher Schlüssel?)');
+    }
     if(remote && (remote.updatedAt||0) > (DATA.updatedAt||0)){
       DATA = remote; ensureShape();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
@@ -484,6 +498,9 @@ async function connectSync(){
   syncStatus = 'syncing'; render();
   try{
     const remote = await firebaseGet();
+    if(remote && !isValidBudgetData(remote)){
+      throw new Error('Ungültige Antwort aus der Cloud-Datenbank (falsche URL oder falscher Schlüssel?)');
+    }
     if(remote){
       if((remote.updatedAt||0) >= (DATA.updatedAt||0)){ DATA = remote; ensureShape(); }
       else { await firebasePut(DATA); }
@@ -611,6 +628,32 @@ function allCategories(){
 }
 /* ---------- Render root ---------- */
 function render(){
+  try{
+    renderInner();
+  }catch(e){
+    console.error('Render-Fehler', e);
+    const wrap = document.getElementById('wrap');
+    wrap.innerHTML = `
+      <div style="max-width:520px;margin:70px auto;text-align:center;color:var(--paper-light);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+        <h2 style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-weight:700;">Etwas ist schiefgelaufen</h2>
+        <p style="opacity:0.8;font-size:13px;margin:10px 0 22px;">${e && e.message ? String(e.message).replace(/</g,'&lt;') : 'Unbekannter Fehler'}</p>
+        <button class="icon-btn primary" onclick="recoverFromCrash()">Auf zuletzt gespeicherten Stand zurücksetzen</button>
+      </div>`;
+  }
+}
+function recoverFromCrash(){
+  try{
+    let local = null;
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) local = JSON.parse(raw);
+    DATA = (local && isValidBudgetData(local)) ? local : JSON.parse(JSON.stringify(DEFAULT_DATA));
+    ensureShape();
+    disconnectSync();
+    state.tab = 'dashboard';
+    render();
+  }catch(e){ location.reload(); }
+}
+function renderInner(){
   const wrap = document.getElementById('wrap');
   const {inc,exp} = monthTotals(state.selYear, state.selMonth);
   const saldo = inc-exp;
