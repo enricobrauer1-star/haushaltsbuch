@@ -393,8 +393,16 @@ async function firebasePut(obj){
   const res = await fetch(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(obj)});
   if(!res.ok) throw new Error('HTTP '+res.status);
 }
+function normalizeRemoteData(remote){
+  if(!remote || typeof remote !== 'object' || Array.isArray(remote)) return remote;
+  if(remote.recurring===undefined) remote.recurring = [];
+  if(remote.transactions===undefined) remote.transactions = [];
+  if(remote.kredite===undefined) remote.kredite = [];
+  if(remote.sonstiges===undefined) remote.sonstiges = [];
+  return remote;
+}
 function isValidBudgetData(obj){
-  return !!(obj && typeof obj==='object'
+  return !!(obj && typeof obj==='object' && !Array.isArray(obj)
     && Array.isArray(obj.recurring) && Array.isArray(obj.transactions)
     && Array.isArray(obj.kredite) && Array.isArray(obj.sonstiges));
 }
@@ -423,7 +431,7 @@ async function loadData(){
   if(syncConfig){
     syncStatus = 'syncing'; render();
     try{
-      const remote = await firebaseGet();
+      const remote = normalizeRemoteData(await firebaseGet());
       if(remote && !isValidBudgetData(remote)){
         throw new Error('Ungültige Antwort aus der Cloud-Datenbank (falsche URL oder falscher Schlüssel?)');
       }
@@ -469,7 +477,7 @@ function startSyncPolling(){
 async function pullRemoteIfNewer(){
   if(!syncConfig || isEditingSomething()) return;
   try{
-    const remote = await firebaseGet();
+    const remote = normalizeRemoteData(await firebaseGet());
     if(remote && !isValidBudgetData(remote)){
       throw new Error('Ungültige Antwort aus der Cloud-Datenbank (falsche URL oder falscher Schlüssel?)');
     }
@@ -497,7 +505,7 @@ async function connectSync(){
   saveSyncConfigLocal(syncConfig);
   syncStatus = 'syncing'; render();
   try{
-    const remote = await firebaseGet();
+    const remote = normalizeRemoteData(await firebaseGet());
     if(remote && !isValidBudgetData(remote)){
       throw new Error('Ungültige Antwort aus der Cloud-Datenbank (falsche URL oder falscher Schlüssel?)');
     }
