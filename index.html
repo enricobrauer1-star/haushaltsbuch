@@ -52,6 +52,13 @@
     font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--brass-light);
     margin-top:4px;font-weight:600;
   }
+  .sync-badge{
+    display:inline-block;margin-top:8px;font-size:11px;font-weight:600;
+    padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.08);color:var(--paper-light);
+  }
+  .sync-badge.connected{background:rgba(63,107,79,0.35);}
+  .sync-badge.error{background:rgba(156,59,46,0.4);}
+  .sync-badge.syncing{opacity:0.75;}
   .stamp{
     width:112px;height:112px;border-radius:50%;
     border:3px solid var(--brass-light);
@@ -151,7 +158,7 @@
   @media(max-width:900px){.form-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
   @media(max-width:640px){.form-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
   .form-field{display:flex;flex-direction:column;gap:4px;min-width:0;}
-  .form-actions{display:flex;gap:8px;margin-top:12px;}
+  .form-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
   .chips{display:flex;gap:4px;flex-wrap:wrap;}
   .chip{
     font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:3px 7px;border-radius:5px;
@@ -232,6 +239,28 @@
     letter-spacing:0.8px;color:var(--brass);font-weight:700;
   }
   .fix-subgroup-total{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;}
+
+  /* ---------- Mobile ---------- */
+  html{overflow-x:hidden;}
+  body{overflow-x:hidden;}
+  @media(max-width:680px){
+    body{padding:14px 10px 40px;}
+    .masthead{padding:2px 2px 14px;gap:10px;}
+    .masthead h1{font-size:24px;}
+    .masthead .sub{font-size:10.5px;letter-spacing:1px;}
+    .stamp{width:84px;height:84px;}
+    .stamp .lbl{font-size:8px;}
+    .stamp .val{font-size:13px;}
+    .tab-btn{padding:8px 11px 9px;font-size:12px;}
+    .sheet{padding:16px 12px 20px;}
+    .section-title{font-size:17px;}
+    .section-desc{font-size:11.5px;}
+    .card .v{font-size:18px;}
+    .form-card{padding:12px;}
+    table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:6px;}
+    th, td{padding:6px 6px;font-size:12.5px;}
+    .rowbar{gap:8px;}
+  }
 </style>
 </head>
 <body>
@@ -316,185 +345,167 @@ let state = {
   addingRecGroup: null,
   addingKr: null,
   addingSon: false,
-  resetConfirm: false,
-  syncMsg: null,
-  syncMsgError: false
+  resetConfirm: false
 };
 /* ---------- Storage ---------- */
 const hasCloudStorage = (typeof window.storage !== 'undefined') && window.storage && typeof window.storage.get === 'function';
-async function storageGet(key){
-  if(hasCloudStorage){
-    try{ return await window.storage.get(key, false); }
-    catch(e){ return null; }
-  }
-  try{
-    const raw = localStorage.getItem(key);
-    return raw ? {key, value: raw, shared:false} : null;
-  }catch(e){ return null; }
-}
-async function storageSet(key, value){
-  if(hasCloudStorage){
-    try{ return await window.storage.set(key, value, false); }
-    catch(e){ console.error('Cloud-Speichern fehlgeschlagen', e); return null; }
-  }
-  try{
-    localStorage.setItem(key, value);
-    return {key, value, shared:false};
-  }catch(e){ console.error('Lokales Speichern fehlgeschlagen', e); return null; }
-}
-/* Firebase Realtime Database entfernt leere Arrays/Objekte beim Schreiben (bekannte Eigenheit) —
-   nach jedem Laden/Sync-Übernehmen von DATA müssen daher betroffene Felder wiederhergestellt werden. */
-function normalizeData(){
-  if(!Array.isArray(DATA.recurring)) DATA.recurring = [];
-  if(!Array.isArray(DATA.transactions)) DATA.transactions = [];
-  if(!Array.isArray(DATA.kredite)) DATA.kredite = [];
-  if(!Array.isArray(DATA.sonstiges)) DATA.sonstiges = [];
-  if(!DATA.paidMarks || typeof DATA.paidMarks!=='object') DATA.paidMarks = {};
-  if(!DATA.dateOverrides || typeof DATA.dateOverrides!=='object') DATA.dateOverrides = {};
-  DATA.recurring.forEach(r=>{
-    if(!Array.isArray(r.months)) r.months = [];
-    if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod];
-  });
+const SYNC_CONFIG_KEY = 'haushaltsbuch-sync-config';
+let syncConfig = null;          // {dbUrl, syncKey} — nur relevant außerhalb des Chats
+let syncStatus = 'none';        // 'none' | 'syncing' | 'connected' | 'error'
+let syncErrorMsg = '';
+let syncPollTimer = null;
+
+function ensureShape(){
+  if(!DATA.paidMarks) DATA.paidMarks = {};
+  if(!DATA.dateOverrides) DATA.dateOverrides = {};
+  if(!DATA.updatedAt) DATA.updatedAt = 0;
+  DATA.recurring.forEach(r=>{ if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod]; });
   DATA.transactions.forEach(t=>{ if(PAYMENT_SLUG_MIGRATION[t.paymentMethod]) t.paymentMethod = PAYMENT_SLUG_MIGRATION[t.paymentMethod]; });
 }
-async function loadData(){
-  loadSyncConfig();
-  try{
-    const res = await storageGet(STORAGE_KEY);
-    if(res && res.value){ DATA = JSON.parse(res.value); }
-    else { DATA = JSON.parse(JSON.stringify(DEFAULT_DATA)); await saveData(); }
-  }catch(e){
-    DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
-    try{ await saveData(); }catch(e2){}
-  }
-  normalizeData();
-  render();
-  if(syncConfig.connected){
-    syncReconcile().then(()=>{ render(); });
-  }
+function isEditingSomething(){
+  return !!(state.editTxnId || state.editRecId || state.editKrId || state.editSonId || state.addingRecGroup || state.addingKr || state.addingSon);
 }
-async function saveData(){
-  DATA.updatedAt = Date.now();
-  await storageSet(STORAGE_KEY, JSON.stringify(DATA));
-  if(syncConfig.connected){
-    pushToFirebase().then(()=>{
-      syncConfig.lastSync = Date.now();
-      saveSyncConfigLocal();
-    }).catch(e=>{ console.error('Auto-Sync-Push fehlgeschlagen', e); });
-  }
-}
-/* ---------- Sync (Firebase Realtime Database, REST) ---------- */
-const SYNC_CONFIG_KEY = 'haushaltsbuch-sync-config';
-let syncConfig = {url:'', key:'', connected:false, lastSync:null};
+
+/* -- lokaler Sync-Konfig (Gerätespeicher, unabhängig von den Budgetdaten) -- */
 function loadSyncConfig(){
-  try{
-    const raw = localStorage.getItem(SYNC_CONFIG_KEY);
-    if(raw) syncConfig = Object.assign({url:'', key:'', connected:false, lastSync:null}, JSON.parse(raw));
-  }catch(e){}
+  try{ const raw = localStorage.getItem(SYNC_CONFIG_KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
 }
-function saveSyncConfigLocal(){
-  try{ localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig)); }catch(e){}
+function saveSyncConfigLocal(cfg){ try{ localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(cfg)); }catch(e){} }
+function clearSyncConfigLocal(){ try{ localStorage.removeItem(SYNC_CONFIG_KEY); }catch(e){} }
+
+/* -- Firebase Realtime Database via REST (keine SDK nötig) -- */
+function firebasePath(){
+  if(!syncConfig || !syncConfig.dbUrl || !syncConfig.syncKey) return null;
+  const base = syncConfig.dbUrl.trim().replace(/\/$/,'');
+  return `${base}/haushaltsbuch/${encodeURIComponent(syncConfig.syncKey.trim())}.json`;
 }
-function normalizeFirebaseUrl(url){
-  let u = (url||'').trim();
-  if(!/^https?:\/\//i.test(u)) u = 'https://'+u;
-  return u.replace(/\/+$/,'');
-}
-function firebaseDataUrl(){
-  return `${normalizeFirebaseUrl(syncConfig.url)}/haushaltsbuch/${encodeURIComponent(syncConfig.key)}.json`;
-}
-function genSyncKey(){
-  let key = '';
-  if(window.crypto && crypto.getRandomValues){
-    const arr = new Uint8Array(15);
-    crypto.getRandomValues(arr);
-    key = Array.from(arr, b=>b.toString(36).padStart(2,'0')).join('').slice(0,20);
-  } else {
-    key = (Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)).slice(0,20);
-  }
-  const inp = document.getElementById('sync-key');
-  if(inp) inp.value = key;
-}
-async function pushToFirebase(){
-  const res = await fetch(firebaseDataUrl(), {
-    method:'PUT',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(DATA)
-  });
-  if(!res.ok) throw new Error('Firebase-Antwort: '+res.status);
-  return true;
-}
-async function pullFromFirebase(){
-  const res = await fetch(firebaseDataUrl());
-  if(!res.ok) throw new Error('Firebase-Antwort: '+res.status);
+async function firebaseGet(){
+  const url = firebasePath();
+  if(!url) return null;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('HTTP '+res.status);
   return await res.json();
 }
-async function connectAndSync(){
-  const urlInput = document.getElementById('sync-url');
-  const keyInput = document.getElementById('sync-key');
-  const url = urlInput ? urlInput.value.trim() : '';
-  const key = keyInput ? keyInput.value.trim() : '';
-  if(!url || !key){
-    state.syncMsg = 'Bitte Datenbank-URL und Sync-Schlüssel ausfüllen.';
-    state.syncMsgError = true;
+async function firebasePut(obj){
+  const url = firebasePath();
+  if(!url) return;
+  const res = await fetch(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(obj)});
+  if(!res.ok) throw new Error('HTTP '+res.status);
+}
+
+/* -- Laden -- */
+async function loadData(){
+  let local = null;
+  try{ const raw = localStorage.getItem(STORAGE_KEY); if(raw) local = JSON.parse(raw); }catch(e){}
+
+  if(hasCloudStorage){
+    try{
+      const res = await window.storage.get(STORAGE_KEY, false);
+      DATA = (res && res.value) ? JSON.parse(res.value) : (local || JSON.parse(JSON.stringify(DEFAULT_DATA)));
+    }catch(e){ DATA = local || JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+    ensureShape();
     render();
+    try{ await window.storage.set(STORAGE_KEY, JSON.stringify(DATA), false); }catch(e){}
     return;
   }
-  syncConfig.url = url; syncConfig.key = key;
-  state.syncMsg = 'Verbinde …'; state.syncMsgError = false;
+
+  DATA = local || JSON.parse(JSON.stringify(DEFAULT_DATA));
+  ensureShape();
   render();
+
+  syncConfig = loadSyncConfig();
+  if(syncConfig){
+    syncStatus = 'syncing'; render();
+    try{
+      const remote = await firebaseGet();
+      if(remote){
+        if(!local || (remote.updatedAt||0) >= (local.updatedAt||0)){ DATA = remote; ensureShape(); }
+        else { await firebasePut(DATA); }
+      } else {
+        DATA.updatedAt = Date.now();
+        await firebasePut(DATA);
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+      syncStatus = 'connected'; syncErrorMsg='';
+    }catch(e){ syncStatus = 'error'; syncErrorMsg = e.message||String(e); console.error('Sync-Fehler', e); }
+    render();
+    startSyncPolling();
+  }
+}
+
+/* -- Speichern -- */
+async function saveData(){
+  DATA.updatedAt = Date.now();
+  if(hasCloudStorage){
+    try{ await window.storage.set(STORAGE_KEY, JSON.stringify(DATA), false); }
+    catch(e){ console.error('Speichern (Chat) fehlgeschlagen', e); }
+    return;
+  }
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
+  if(syncConfig){
+    try{ await firebasePut(DATA); syncStatus='connected'; syncErrorMsg=''; }
+    catch(e){ syncStatus='error'; syncErrorMsg = e.message||String(e); console.error('Sync-Fehler beim Speichern', e); }
+  }
+}
+
+/* -- Hintergrund-Abgleich -- */
+function startSyncPolling(){
+  if(syncPollTimer) clearInterval(syncPollTimer);
+  syncPollTimer = setInterval(pullRemoteIfNewer, 20000);
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) pullRemoteIfNewer(); });
+}
+async function pullRemoteIfNewer(){
+  if(!syncConfig || isEditingSomething()) return;
   try{
-    const remote = await pullFromFirebase();
-    if(remote && remote.updatedAt && (!DATA.updatedAt || remote.updatedAt > DATA.updatedAt)){
-      DATA = remote;
-      normalizeData();
-      await storageSet(STORAGE_KEY, JSON.stringify(DATA));
+    const remote = await firebaseGet();
+    if(remote && (remote.updatedAt||0) > (DATA.updatedAt||0)){
+      DATA = remote; ensureShape();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+      render();
+    }
+    syncStatus = 'connected'; syncErrorMsg='';
+  }catch(e){ syncStatus = 'error'; syncErrorMsg = e.message||String(e); console.error('Sync-Poll-Fehler', e); }
+}
+
+/* -- Sync-Formular-Aktionen -- */
+function genRandomKey(){
+  const chars='abcdefghijkmnopqrstuvwxyz23456789';
+  let s='';
+  for(let i=0;i<20;i++) s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+async function connectSync(){
+  const dbUrl = document.getElementById('sync-dburl').value.trim();
+  const key = document.getElementById('sync-key').value.trim();
+  if(!dbUrl || !key){ syncErrorMsg='Bitte Datenbank-URL und Sync-Schlüssel angeben.'; syncStatus='error'; render(); return; }
+  syncConfig = {dbUrl, syncKey:key};
+  saveSyncConfigLocal(syncConfig);
+  syncStatus = 'syncing'; render();
+  try{
+    const remote = await firebaseGet();
+    if(remote){
+      if((remote.updatedAt||0) >= (DATA.updatedAt||0)){ DATA = remote; ensureShape(); }
+      else { await firebasePut(DATA); }
     } else {
       DATA.updatedAt = Date.now();
-      await pushToFirebase();
+      await firebasePut(DATA);
     }
-    syncConfig.connected = true;
-    syncConfig.lastSync = Date.now();
-    saveSyncConfigLocal();
-    state.syncMsg = 'Verbunden & synchronisiert.'; state.syncMsgError = false;
-  }catch(e){
-    console.error('Sync-Verbindung fehlgeschlagen', e);
-    state.syncMsg = 'Verbindung fehlgeschlagen: '+e.message; state.syncMsgError = true;
-  }
-  render();
-}
-async function syncReconcile(){
-  if(!syncConfig.connected || !syncConfig.url || !syncConfig.key) return;
-  try{
-    const remote = await pullFromFirebase();
-    if(remote && remote.updatedAt && (!DATA.updatedAt || remote.updatedAt > DATA.updatedAt)){
-      DATA = remote;
-      normalizeData();
-      await storageSet(STORAGE_KEY, JSON.stringify(DATA));
-    } else if(DATA.updatedAt){
-      await pushToFirebase();
-    }
-    syncConfig.lastSync = Date.now();
-    saveSyncConfigLocal();
-    state.syncMsg = 'Zuletzt synchronisiert: '+new Date(syncConfig.lastSync).toLocaleTimeString('de-DE');
-    state.syncMsgError = false;
-  }catch(e){
-    console.error('Sync fehlgeschlagen', e);
-    state.syncMsg = 'Sync fehlgeschlagen: '+e.message;
-    state.syncMsgError = true;
-  }
-}
-async function syncNowManual(){
-  state.syncMsg = 'Synchronisiere …'; state.syncMsgError = false;
-  render();
-  await syncReconcile();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+    syncStatus = 'connected'; syncErrorMsg='';
+  }catch(e){ syncStatus = 'error'; syncErrorMsg = e.message||String(e); console.error(e); }
+  startSyncPolling();
   render();
 }
 function disconnectSync(){
-  syncConfig = {url:syncConfig.url, key:syncConfig.key, connected:false, lastSync:syncConfig.lastSync};
-  saveSyncConfigLocal();
-  state.syncMsg = 'Sync getrennt (URL & Schlüssel bleiben im Formular stehen).';
-  state.syncMsgError = false;
+  clearSyncConfigLocal();
+  syncConfig = null; syncStatus = 'none'; syncErrorMsg='';
+  if(syncPollTimer){ clearInterval(syncPollTimer); syncPollTimer=null; }
+  render();
+}
+async function manualSyncNow(){
+  syncStatus='syncing'; render();
+  await pullRemoteIfNewer();
   render();
 }
 /* ---------- Helpers ---------- */
@@ -608,6 +619,7 @@ function render(){
       <div>
         <h1>Haushaltsbuch</h1>
         <div class="sub">Einnahmen &amp; Ausgaben im Blick</div>
+        ${!hasCloudStorage && syncConfig ? `<div class="sync-badge ${syncStatus}">${syncStatus==='connected'?'☁ Synchronisiert':syncStatus==='syncing'?'☁ Synchronisiere …':'⚠ Sync-Fehler'}</div>` : ''}
       </div>
       <div class="stamp ${saldo<0?'neg':''}">
         <div class="lbl">Saldo</div>
@@ -623,7 +635,7 @@ function render(){
       ${tabBtn('buchungen','Buchungen')}
       ${tabBtn('fixkosten','Fixkosten')}
       ${tabBtn('kredite','Kredite')}
-      ${tabBtn('sync','Sync')}
+      ${!hasCloudStorage ? tabBtn('sync','Sync') : ''}
     </div>
     <div class="sheet flat" id="sheet"></div>
     ${state.resetConfirm ? `
@@ -634,7 +646,7 @@ function render(){
           <button class="icon-btn" onclick="state.resetConfirm=false; render();">Abbrechen</button>
         </span>
       </div>` : ''}
-    <div class="footer-note">${hasCloudStorage ? 'Daten werden in diesem Chat gespeichert' : 'Daten werden lokal in diesem Browser auf diesem Rechner gespeichert'}${syncConfig.connected ? ' · 🔄 Sync verbunden'+(syncConfig.lastSync ? ' (zuletzt '+new Date(syncConfig.lastSync).toLocaleTimeString('de-DE')+')' : '') : ''} · <button onclick="state.resetConfirm=true; render();">Auf Ausgangsdaten zurücksetzen</button></div>
+    <div class="footer-note">${hasCloudStorage ? 'Daten werden in diesem Chat gespeichert' : (syncConfig ? 'Daten werden lokal gespeichert und mit der Cloud synchronisiert' : 'Daten werden lokal in diesem Browser auf diesem Rechner gespeichert')} · <button onclick="state.resetConfirm=true; render();">Auf Ausgangsdaten zurücksetzen</button></div>
   `;
   const sheet = document.getElementById('sheet');
   if(state.tab==='dashboard') sheet.innerHTML = renderDashboard();
@@ -647,7 +659,7 @@ function render(){
 function tabBtn(id,label){
   return `<button class="tab-btn ${state.tab===id?'active':''}" onclick="switchTab('${id}')">${label}</button>`;
 }
-function switchTab(id){ state.tab=id; state.editTxnId=null; state.editRecId=null; state.editKrId=null; state.editSonId=null; state.resetConfirm=false; state.syncMsg=null; render(); }
+function switchTab(id){ state.tab=id; state.editTxnId=null; state.editRecId=null; state.editKrId=null; state.editSonId=null; state.resetConfirm=false; render(); }
 /* ---------- Dashboard ---------- */
 function renderDashboard(){
   const {inc,exp} = monthTotals(state.selYear, state.selMonth);
@@ -1281,56 +1293,57 @@ function addSon(){
   state.addingSon = false; saveData(); render();
 }
 function deleteSon(id){ DATA.sonstiges = DATA.sonstiges.filter(s=>s.id!==id); saveData(); render(); }
-/* ---------- Sync-Tab (UI) ---------- */
+/* ---------- Sync ---------- */
 function renderSync(){
+  if(hasCloudStorage){
+    return `
+      <h2 class="section-title">Synchronisation</h2>
+      <p class="section-desc">Diese Ansicht läuft gerade im Chat und speichert bereits automatisch bei Claude. Die Cloud-Synchronisation unten ist für die heruntergeladene Datei auf deinem Rechner bzw. Handy gedacht — öffne dort die Datei, um sie einzurichten.</p>
+    `;
+  }
   const cfg = syncConfig;
-  const statusLabel = !cfg.url || !cfg.key ? 'Nicht eingerichtet' : (cfg.connected ? 'Verbunden' : 'Eingerichtet, nicht verbunden');
-  const lastSyncLabel = cfg.lastSync ? new Date(cfg.lastSync).toLocaleString('de-DE') : '–';
-  const ruleKey = esc(cfg.key || 'DEIN-SCHLÜSSEL');
   return `
-    <h2 class="section-title">Sync <span class="n">${statusLabel}</span></h2>
-    <p class="section-desc">Verbindet dieses Haushaltsbuch mit einer eigenen Firebase Realtime Database, damit Daten geräteübergreifend synchron bleiben. Ohne Verbindung werden Daten nur lokal in diesem Browser gespeichert.</p>
-    <div class="form-card">
-      <div class="form-grid" style="grid-template-columns:1fr;">
-        <div class="form-field">
-          <label class="small">Firebase Datenbank-URL</label>
-          <input type="text" id="sync-url" placeholder="https://dein-projekt-default-rtdb.firebaseio.com/" value="${esc(cfg.url||'')}">
-        </div>
-        <div class="form-field">
-          <label class="small">Sync-Schlüssel</label>
-          <div style="display:flex;gap:8px;">
-            <input type="text" id="sync-key" placeholder="Zufällig erzeugen oder eigenen eintragen" value="${esc(cfg.key||'')}" style="flex:1;">
-            <button class="icon-btn" onclick="genSyncKey()">🎲 Zufällig erzeugen</button>
-          </div>
+    <h2 class="section-title">Synchronisation zwischen Geräten</h2>
+    <p class="section-desc">Verbindet dieses Gerät mit einer kostenlosen Firebase-Datenbank, damit Desktop und Handy denselben Datenstand sehen.</p>
+    <div class="card ${syncStatus==='connected'?'income':syncStatus==='error'?'expense':''}" style="max-width:420px;margin-bottom:20px;">
+      <div class="k">Status</div>
+      <div class="v" style="font-size:15px;">${
+        syncStatus==='connected' ? '☁ Verbunden & synchronisiert' :
+        syncStatus==='syncing' ? '☁ Synchronisiere …' :
+        syncStatus==='error' ? '⚠ Fehler bei der Synchronisation' :
+        'Noch nicht eingerichtet'
+      }</div>
+      ${syncStatus==='error' && syncErrorMsg ? `<div style="font-size:12px;color:var(--expense);margin-top:6px;">${esc(syncErrorMsg)}</div>` : ''}
+    </div>
+    <div class="form-card" style="max-width:520px;">
+      <div class="form-field" style="margin-bottom:10px;">
+        <label class="small">Firebase Datenbank-URL</label>
+        <input type="text" id="sync-dburl" placeholder="https://dein-projekt-default-rtdb.europe-west1.firebasedatabase.app" value="${cfg?esc(cfg.dbUrl):''}" style="width:100%;">
+      </div>
+      <div class="form-field" style="margin-bottom:10px;">
+        <label class="small">Sync-Schlüssel (wie ein Passwort — auf beiden Geräten identisch eintragen)</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="sync-key" placeholder="z. B. zufällige Zeichenfolge" value="${cfg?esc(cfg.syncKey):''}" style="flex:1;">
+          <button class="icon-btn" onclick="document.getElementById('sync-key').value = genRandomKey();">Zufällig erzeugen</button>
         </div>
       </div>
       <div class="form-actions">
-        <button class="icon-btn primary" onclick="connectAndSync()">Verbinden &amp; synchronisieren</button>
-        ${cfg.connected ? `<button class="icon-btn" onclick="syncNowManual()">↻ Jetzt synchronisieren</button><button class="icon-btn danger" onclick="disconnectSync()">Trennen</button>` : ''}
+        <button class="icon-btn primary" onclick="connectSync()">${cfg?'Neu verbinden':'Verbinden & synchronisieren'}</button>
+        ${cfg?`<button class="icon-btn" onclick="manualSyncNow()">Jetzt aktualisieren</button><button class="icon-btn danger" onclick="disconnectSync()">Trennen</button>`:''}
       </div>
-      ${state.syncMsg ? `<p class="section-desc" style="margin-top:12px;color:${state.syncMsgError?'var(--expense)':'var(--income)'};">${esc(state.syncMsg)}</p>` : ''}
-      <p class="section-desc" style="margin-top:16px;">Letzte Synchronisierung: ${lastSyncLabel}</p>
     </div>
-    <div class="group-block">
-      <h3>Einrichtung</h3>
-      <p class="section-desc">
-        1. Firebase-Projekt anlegen (console.firebase.google.com) → Realtime Database erstellen.<br>
-        2. Datenbank-URL oben eintragen (endet auf „…firebaseio.com/" bzw. „…firebasedatabase.app/").<br>
-        3. Sync-Schlüssel zufällig erzeugen, notieren und auf jedem Gerät identisch eintragen.<br>
-        4. Auf jedem Gerät „Verbinden &amp; synchronisieren" klicken.
-      </p>
-      <p class="section-desc" style="margin-top:10px;">⚠️ Sicherheitshinweis: Ohne eigene Regeln kann jeder mit Datenbank-URL und Sync-Schlüssel lesen/schreiben. Für echten Schutz in den Firebase-Regeln (Realtime Database → Regeln) den Pfad auf den eigenen Schlüssel einschränken, z. B.:</p>
-      <pre style="background:var(--paper-light);border:1px solid var(--rule);border-radius:8px;padding:10px;font-size:11.5px;overflow-x:auto;">{
-  "rules": {
-    "haushaltsbuch": {
-      "$key": {
-        ".read": "$key === '${ruleKey}'",
-        ".write": "$key === '${ruleKey}'"
-      }
-    }
-  }
-}</pre>
-    </div>
+    <h3 style="font-family:'Fraunces',serif;font-size:15px;margin:26px 0 10px;">Einmalige Einrichtung (pro Gerät ca. 2 Minuten)</h3>
+    <ol style="font-size:13px;color:var(--ink-soft);line-height:1.9;padding-left:20px;">
+      <li>Auf <strong>console.firebase.google.com</strong> mit einem Google-Konto anmelden und ein neues (kostenloses) Projekt anlegen.</li>
+      <li>Im Menü links <strong>Build → Realtime Database</strong> öffnen → <strong>Datenbank erstellen</strong> (beliebiger Standort, z. B. Europe).</li>
+      <li>Beim Sicherheitsmodus <strong>„Testmodus"</strong> wählen — danach unter dem Reiter <strong>„Regeln"</strong> diesen Inhalt einfügen und veröffentlichen, damit der Zugriff dauerhaft (nicht nur 30 Tage) funktioniert:
+        <br><code style="display:block;background:var(--paper-light);border:1px solid var(--rule);border-radius:6px;padding:8px;margin-top:6px;white-space:pre;">{ "rules": { ".read": true, ".write": true } }</code>
+      </li>
+      <li>Oben auf der Datenbank-Seite die angezeigte <strong>Datenbank-URL</strong> kopieren (endet auf „…firebasedatabase.app" oder „…firebaseio.com") und oben in das Feld einfügen.</li>
+      <li>Einen <strong>Sync-Schlüssel</strong> erzeugen lassen (Knopf oben) und <strong>notieren</strong> — er ersetzt ein Passwort, da die Datenbank offen ist.</li>
+      <li>Auf dem zweiten Gerät (Handy) exakt <strong>dieselbe</strong> Datenbank-URL und denselben Sync-Schlüssel eintragen und verbinden.</li>
+    </ol>
+    <p class="section-desc" style="margin-top:10px;">Hinweis: Mit „Testmodus"-Regeln kann grundsätzlich jeder mit der genauen URL und dem Schlüssel auf die Daten zugreifen. Für ein rein privates Haushaltsbuch ist das in Ordnung, solange der Schlüssel geheim bleibt — teile ihn nicht öffentlich.</p>
   `;
 }
 /* ---------- Reset ---------- */
