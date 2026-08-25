@@ -359,7 +359,10 @@ function ensureShape(){
   if(!DATA.paidMarks) DATA.paidMarks = {};
   if(!DATA.dateOverrides) DATA.dateOverrides = {};
   if(!DATA.updatedAt) DATA.updatedAt = 0;
-  DATA.recurring.forEach(r=>{ if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod]; });
+  DATA.recurring.forEach(r=>{
+    if(PAYMENT_SLUG_MIGRATION[r.paymentMethod]) r.paymentMethod = PAYMENT_SLUG_MIGRATION[r.paymentMethod];
+    if(!Array.isArray(r.months)) r.months = [];
+  });
   DATA.transactions.forEach(t=>{ if(PAYMENT_SLUG_MIGRATION[t.paymentMethod]) t.paymentMethod = PAYMENT_SLUG_MIGRATION[t.paymentMethod]; });
 }
 function isEditingSomething(){
@@ -1092,7 +1095,7 @@ function recRow(r, isPeriodic){
     </td>
     <td>${fixDateCell(r)}</td>
     <td class="cat-cell">${esc(r.category)}</td>
-    <td>${isPeriodic ? r.months.map(m=>MONTH_ABBR[m-1]).join(', ') : 'jeden Monat'}</td>
+    <td>${isPeriodic ? (r.months||[]).map(m=>MONTH_ABBR[m-1]).join(', ') : 'jeden Monat'}</td>
     <td>${typeBadge(r.type)}</td>
     <td>${paymentMethodInput('fix', r.id, r.type, r.paymentMethod)}</td>
     <td class="num ${r.type==='einnahme'?'amt-in':'amt-out'}">${fmtEUR(r.amount)}</td>
@@ -1104,7 +1107,7 @@ function recEditRow(r, isPeriodic){
     <td></td>
     <td>${fixDateCell(r)}</td>
     <td><input type="text" id="er-cat" value="${esc(r.category)}" style="width:100%;"></td>
-    <td>${isPeriodic ? monthChips(r.months,'er-months') : '<span style="color:var(--ink-soft);">jeden Monat</span>'}</td>
+    <td>${isPeriodic ? monthChips(r.months||[],'er-months') : '<span style="color:var(--ink-soft);">jeden Monat</span>'}</td>
     <td>${typeBadge(r.type)}</td>
     <td>${paymentMethodInput('fix', r.id, r.type, r.paymentMethod)}</td>
     <td class="num"><input type="text" inputmode="decimal" id="er-amt" value="${String(r.amount).replace('.',',')}" style="width:90px;text-align:right;"></td>
